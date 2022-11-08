@@ -9,7 +9,8 @@ public class Application {
     public static void main(String[] args){
         Simple simple = new Simple();
         // Initialize and utilize the system
-        123
+        int i =0;
+        12234
     }
 
 }
