@@ -2,10 +2,10 @@ package hk.edu.polyu.comp.comp2021.simple.model;
 
 import java.util.Scanner;
 
-public class Simple {
+public class Simple{
 
     boolean EOF = false;
-    public Simple(){
+    public Simple() throws InterpreterException {
         do{
             System.out.print(">");
             Scanner sc = new Scanner(System.in);
@@ -14,8 +14,9 @@ public class Simple {
                 EOF = true;
                 sc.close();
             }
-            SampleController.Init(statement);
+            //SampleController.Init(statement);
         }while(!EOF);
+
     }
 
 }
