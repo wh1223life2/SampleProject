@@ -1,5 +1,7 @@
 package hk.edu.polyu.comp.comp2021.simple.model;
 
+import java.util.ArrayList;
+import java.util.Map;
 import java.util.Scanner;
 
 public class Simple{
@@ -10,13 +12,14 @@ public class Simple{
             System.out.print(">");
             Scanner sc = new Scanner(System.in);
             String statement = sc.nextLine();
-            if(statement.equals(new String("quit"))){
+            if(statement.equals("quit")){
                 EOF = true;
                 sc.close();
             }
-            //SampleController.Init(statement);
+            if(!EOF)
+                SampleController.Initial(statement);
         }while(!EOF);
-
+        //SampleController.Testing();
     }
 
 }
