@@ -29,6 +29,11 @@ public class SampleController {
         }
     }
 
+    public static void exceute(){
+        if 2 type == "block"
+                Samplemodel
+    }
+
     /*public static void Testing(){
         for(Map.Entry<String, String> entry: Statments.entrySet()){
             System.out.println(entry.getKey());

@@ -9,7 +9,7 @@ public class ExceptionHandle {
     public static final int NOTVAR = 5;
     public static final int DUPLABEL = 6;
     public static final int UNDEFLABEL = 7;
-    final int UNDEFINEDVAR = 8;
+    public static final int UNDEFINEDVAR = 8;
 
     public static void handleErr(int error) throws InterpreterException
     {
