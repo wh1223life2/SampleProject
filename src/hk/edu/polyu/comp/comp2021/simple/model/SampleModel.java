@@ -37,7 +37,6 @@ public class SampleModel {
         intvar.put(part2_name,part3_int);
 
 
-
        /* Statment = "float x 100"
                 string1 ="float" string2 ="x" string3/int = "100";
                 Hashmap<String,int> INT
@@ -47,10 +46,20 @@ public class SampleModel {
 
     }
 
-    public static void binExpr(Statement ?){
+    public static void binExpr(Statement s) throws InterpreterException{
+        if(s==null){
+            System.out.println("Nothing expected");
+        }
+        int b=0;
+        for(int i=0;i<s.getExpression().length();i++){
+            if(s.getExpression().charAt(i)<80){
+                Character a = s.getExpression().charAt(i);
+                b = i;
+            }
+        }
 
-
-
+        //int a=s.getExpression().indexOf(s.getLabel());
+        System.out.println(s.getExpression().substring(0,a)+s.getLabel()+s.getExpression().substring(a));
 
        /* if(Varname.type == int)
             handle-》Varcontent
@@ -58,8 +67,17 @@ public class SampleModel {
         return Varname,Varcontent; (pair)*/
     }
 
-    public static void unExpr(Statement ?){
-
+    public static void unExpr(Statement s) throws InterpreterException {
+        int n = s.getExpression().indexOf("+");
+        int k = s.getExpression().indexOf("-");
+        if(k>0){
+            Integer a = Integer.parseInt(s.getExpression().substring(0,k))-Integer.parseInt(s.getExpression().substring(k+1));
+            intvar.put("-",a);
+        }
+        if(n>0){
+            Integer a = Integer.parseInt(s.getExpression().substring(0,k))+Integer.parseInt(s.getExpression().substring(k+1));
+            intvar.put("+",a);
+        }
 
         /*if(Varname.type == int)
         handle-》Varcontent
@@ -69,6 +87,10 @@ public class SampleModel {
 
     public static void assign(Statement value){
 
+    }
+
+    public static void print(Statement s){
+        System.out.println(s.getExpression()+s.getLabel()+s.getOperationType());
     }
 
 }
