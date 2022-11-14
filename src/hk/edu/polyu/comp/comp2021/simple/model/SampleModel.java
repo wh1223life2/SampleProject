@@ -11,6 +11,7 @@ public class SampleModel {
 
     public static HashMap<String, String> boolvar = new HashMap<>();
     public static HashMap<String, Integer> intvar = new HashMap<String, Integer>();
+
     public static void varDefine(Statement statement) throws InterpreterException {
 
         String expression = statement.getExpression();
@@ -22,18 +23,18 @@ public class SampleModel {
             list[index++] = part;
         }
 
-        String part1_name = list[0];
-        String part2_type = list[1];
+        String part1_type = list[0];
+        String part2_name = list[1];
         String part3 = list[2];
 
         Integer part3_int = Integer.parseInt(part3);
         if(part3_int % 1 == 0){
             ExceptionController.handleErr(ExceptionController.SYNTAX);
         }
-        if(part2_type != "int"){
+        if(part2_name != "int"){
             ExceptionController.handleErr(ExceptionController.NOTVAR);
         }
-        intvar.put(part1_name,part3_int);
+        intvar.put(part2_name,part3_int);
 
 
 
@@ -49,6 +50,8 @@ public class SampleModel {
     public static void binExpr(Statement ?){
 
 
+
+
        /* if(Varname.type == int)
             handle-》Varcontent
                 else ...
@@ -62,6 +65,10 @@ public class SampleModel {
         handle-》Varcontent
                 else ...
         return Varname,Varcontent; (pair)*/
+    }
+
+    public static void assign(Statement value){
+
     }
 
 }
