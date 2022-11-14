@@ -28,7 +28,7 @@ public class SampleModel {
         String part3 = list[2];
 
         Integer part3_int = Integer.parseInt(part3);
-        if(part3_int % 1 == 0){
+        if(part3_int % 1 != 0){
             ExceptionController.handleErr(ExceptionController.SYNTAX);
         }
         if(part2_name != "int"){
@@ -85,8 +85,24 @@ public class SampleModel {
         return Varname,Varcontent; (pair)*/
     }
 
-    public static void assign(Statement value){
+    public static void assign(Statement value) throws InterpreterException{
+        String s = value.getExpression();
+        String[] s_list = s.split(" ");
 
+        String[] list = {};
+        int index = 0;
+        for(String name: s_list){
+            list[index++] = name;
+        }
+
+        String part_1 = list[0];
+        String part_2 = list[1];
+
+        Integer number = Integer.parseInt(part_2);
+        if(number % 1 != 0){
+            ExceptionController.handleErr(ExceptionController.SYNTAX);
+        }
+        intvar.put(part_1,number);
     }
 
     public static void print(Statement s){
