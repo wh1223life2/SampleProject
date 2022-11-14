@@ -1,4 +1,4 @@
-package hk.edu.polyu.comp.comp2021.simple.model;
+package hk.edu.polyu.comp.comp2021.simple.control;
 
 public class InterpreterException extends Exception {
     String err;

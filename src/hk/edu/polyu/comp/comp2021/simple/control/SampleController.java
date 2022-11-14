@@ -1,4 +1,4 @@
-package hk.edu.polyu.comp.comp2021.simple.model;
+package hk.edu.polyu.comp.comp2021.simple.control;
 
 import java.util.*;
 
@@ -7,16 +7,16 @@ public class SampleController {
     public static HashMap<String,String> Statments = new HashMap<>();
     public static HashMap<String,String> ExecuteType = new HashMap<>();
     public static List<String> DeExecuteType = Arrays.asList("vardef","binexpr","print","skip","if","assign","while","block");
-    public static void Initial(String str) throws InterpreterException{
+    public static void Initial(String str) throws InterpreterException {
         StringTokenizer currentSub = new StringTokenizer(str," ");
         String temp1 = currentSub.nextToken();
         if(!DeExecuteType.contains(temp1)|| !currentSub.hasMoreTokens())
-            ExceptionHandle.handleErr(ExceptionHandle.NOEXPTP);
+            ExceptionController.handleErr(ExceptionController.NOEXPTP);
         else {
             String temp2 = currentSub.nextToken();
             // execute/list not exists no need to judge
             if(Statments.containsKey(temp2))
-                ExceptionHandle.handleErr(ExceptionHandle.DUPLABEL);
+                ExceptionController.handleErr(ExceptionController.DUPLABEL);
 
             if(temp1.equals("skip")){
                 Statments.put(temp2,"");

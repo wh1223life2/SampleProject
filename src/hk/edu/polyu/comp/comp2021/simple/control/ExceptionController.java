@@ -1,6 +1,6 @@
-package hk.edu.polyu.comp.comp2021.simple.model;
+package hk.edu.polyu.comp.comp2021.simple.control;
 
-public class ExceptionHandle {
+public class ExceptionController {
     public static final int SYNTAX = 0;
     public static final int NOVARTP = 1;
     public static final int NOEXPTP = 2;

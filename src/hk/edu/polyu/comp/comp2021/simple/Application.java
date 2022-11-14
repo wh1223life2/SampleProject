@@ -1,7 +1,7 @@
 package hk.edu.polyu.comp.comp2021.simple;
 
-import hk.edu.polyu.comp.comp2021.simple.model.InterpreterException;
-import hk.edu.polyu.comp.comp2021.simple.model.Simple;
+import hk.edu.polyu.comp.comp2021.simple.control.InterpreterException;
+import hk.edu.polyu.comp.comp2021.simple.view.Simple;
 
 @SuppressWarnings("MissingJavadoc")
 public class Application {
