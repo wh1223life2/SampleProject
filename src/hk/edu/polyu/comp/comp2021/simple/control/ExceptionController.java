@@ -27,6 +27,7 @@ public class ExceptionController {
                 "Undefined label",
                 "Variable cannot be defined"
                 "Operate type dose not exist"
+
         };
         throw new InterpreterException("<" + label + "> " + err[error]);
     }

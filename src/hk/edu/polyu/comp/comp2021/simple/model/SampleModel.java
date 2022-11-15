@@ -4,10 +4,14 @@ package hk.edu.polyu.comp.comp2021.simple.model;
 import hk.edu.polyu.comp.comp2021.simple.control.ExceptionController;
 import hk.edu.polyu.comp.comp2021.simple.control.InterpreterException;
 import hk.edu.polyu.comp.comp2021.simple.control.SampleController;
+import jdk.dynalink.Operation;
+import jdk.vm.ci.meta.ExceptionHandler;
+import sun.security.mscapi.CPublicKey;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.StringTokenizer;
+import java.io.*;
 
 public class SampleModel {
 
@@ -35,7 +39,7 @@ public class SampleModel {
         return -1;
     }
 
-    public static void varDefine(Statement statement) throws InterpreterException {
+    public static void varDefine(Statement statement) throws InterpreterException { //REQ1
 
         String expression = statement.getExpression();
         StringTokenizer st = new StringTokenizer(expression," ");
@@ -50,19 +54,34 @@ public class SampleModel {
 
         intvar.put(name,var);
 
-
-       /* Statment = "float x 100"
-                string1 ="float" string2 ="x" string3/int = "100";
-                Hashmap<String,int> INT
-                        INT.put("x",100);
-                if(string1 != && string!= )
-                    ExceptionHandle.handleErr(ExceptionHandle.NOVARTP);
-
-         */
-
     }
 
-    public static void binExpr(Statement s,ArrayList<String> d) throws InterpreterException{
+    public static void binExpr(Statement s  /*,ArrayList<String> d*/) throws InterpreterException{ //REQ2
+
+        String expression = s.getExpression();
+        StringTokenizer st = new StringTokenizer(expression," ");
+
+        String exp1 = st.nextToken();
+        String bop = st.nextToken();
+        String exp2 = st.nextToken();
+        String[] list = {"%","+","-","*","/",">",">=","<","<=","==","!="};
+        for(int i = 0; i < list.length; i++){
+            if(!bop.equals(list[i])){ExceptionController.handleErr(s.getLabel(),ExceptionController.SYNTAX);}
+        }
+
+        if(intvar.get(exp1) == null || intvar.get(exp2) == null){ExceptionController.handleErr(s.getLabel(),ExceptionController.NOTEXIST);}
+        int value_exp1 = intvar.get(exp1);
+        int value_exp2 = intvar.get(exp2);
+        int value = 0;
+
+        if("%".equals(bop)){value = value_exp1 % value_exp2;}
+        if("+".equals(bop)){value = value_exp1 + value_exp2;}
+        if("-".equals(bop)){value = value_exp1 - value_exp2;}
+        if("*".equals(bop)){value = value_exp1 * value_exp2;}
+        if("/".equals(bop)){value = value_exp1 / value_exp2;}
+        intvar.put(s.getExpression(),value);
+
+        /*
         d.add("==");
         d.add(">=");
         d.add("<=");
@@ -99,7 +118,7 @@ public class SampleModel {
         return Varname,Varcontent; (pair)*/
     }
 
-    public static void unExpr(Statement s) throws InterpreterException {
+    public static void unExpr(Statement s) throws InterpreterException { //REQ3
         int n = s.getExpression().indexOf("+");
         int k = s.getExpression().indexOf("-");
         if(k>0){
@@ -117,13 +136,16 @@ public class SampleModel {
         return Varname,Varcontent; (pair)*/
     }
 
-    public static void assign(Statement value) throws InterpreterException{
-        String expression = value.getExpression();
+    public static void assign(Statement s) throws InterpreterException{ //REQ4
+        String expression = s.getExpression();
         StringTokenizer st = new StringTokenizer(expression," ");
 
         String LHS = st.nextToken();
         String RHS = st.nextToken();
-        int RHS_value = binExpr(RHS);
+
+        if(intvar.get(RHS) == null){ExceptionController.handleErr(s.getLabel(),ExceptionController.UNDEFINEDVAR);}
+        int RHS_value = intvar.get(RHS);
+
         intvar.put(LHS,RHS_value);
 
     }
@@ -136,14 +158,13 @@ public class SampleModel {
 
     }
 
-    public static boolean If(Statement s){
-        return true;
+    public static void block(Statement s){ //REQ7
+
     }
 
     public static boolean block(Statement s){
         if(If(s)) return true;
 
-        return false;
     }
 
     public static void While(Statement s){
