@@ -5,7 +5,9 @@ import hk.edu.polyu.comp.comp2021.simple.control.ExceptionController;
 import hk.edu.polyu.comp.comp2021.simple.control.InterpreterException;
 import jdk.vm.ci.meta.ExceptionHandler;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.StringTokenizer;
 
 public class SampleModel {
 
@@ -15,26 +17,17 @@ public class SampleModel {
     public static void varDefine(Statement statement) throws InterpreterException {
 
         String expression = statement.getExpression();
-        String[] expression_list = expression.split(" ");
+        StringTokenizer st = new StringTokenizer(expression," ");
 
-        String[] list = {};
-        int index = 0;
-        for(String part : expression_list){
-            list[index++] = part;
-        }
+        String type = st.nextToken();
+        String name = st.nextToken();
+        String variable = st.nextToken();
 
-        String part1_type = list[0];
-        String part2_name = list[1];
-        String part3 = list[2];
+        Integer var = Integer.parseInt(variable);
+        if(name != "int"){ExceptionController.handleErr(expression,ExceptionController.NOVARTP);}
+        if(var %1 != 0){ExceptionController.handleErr(expression,ExceptionController.NOEXPTP);}
 
-        Integer part3_int = Integer.parseInt(part3);
-        if(part3_int % 1 != 0){
-            ExceptionController.handleErr(ExceptionController.SYNTAX);
-        }
-        if(part2_name != "int"){
-            ExceptionController.handleErr(ExceptionController.NOTVAR);
-        }
-        intvar.put(part2_name,part3_int);
+        intvar.put(name,var);
 
 
        /* Statment = "float x 100"
@@ -42,24 +35,42 @@ public class SampleModel {
                 Hashmap<String,int> INT
                         INT.put("x",100);
                 if(string1 != && string!= )
-                    ExceptionHandle.handleErr(ExceptionHandle.NOVARTP);*/
+                    ExceptionHandle.handleErr(ExceptionHandle.NOVARTP);
+
+         */
 
     }
 
-    public static void binExpr(Statement s) throws InterpreterException{
+    public static void binExpr(Statement s,ArrayList<String> d) throws InterpreterException{
+        d.add("==");
+        d.add(">=");
+        d.add("<=");
+        d.add(">");
+        d.add("<");
+        d.add("!=");
+        d.add("&&");
+        d.add("||");
+
         if(s==null){
             System.out.println("Nothing expected");
         }
+
         int b=0;
+        Character a=null;
         for(int i=0;i<s.getExpression().length();i++){
-            if(s.getExpression().charAt(i)<80){
-                Character a = s.getExpression().charAt(i);
+            if(s.getExpression().charAt(i)<63){
+                a = s.getExpression().charAt(i);
                 b = i;
             }
         }
-
-        //int a=s.getExpression().indexOf(s.getLabel());
-        System.out.println(s.getExpression().substring(0,a)+s.getLabel()+s.getExpression().substring(a));
+        String result = s.getExpression().substring(b+1);
+        String another_result = "";
+        for(String h:d){
+            if(h==a.toString()){
+                another_result=h;
+            }
+        }
+        boolvar.put(another_result,result);
 
        /* if(Varname.type == int)
             handle-》Varcontent
@@ -86,28 +97,21 @@ public class SampleModel {
     }
 
     public static void assign(Statement value) throws InterpreterException{
-        String s = value.getExpression();
-        String[] s_list = s.split(" ");
+        String expression = value.getExpression();
+        StringTokenizer st = new StringTokenizer(expression," ");
 
-        String[] list = {};
-        int index = 0;
-        for(String name: s_list){
-            list[index++] = name;
-        }
+        String LHS = st.nextToken();
+        String RHS = st.nextToken();
 
-        String part_1 = list[0];
-        String part_2 = list[1];
 
-        Integer number = Integer.parseInt(part_2);
-        if(number % 1 != 0){
-            ExceptionController.handleErr(ExceptionController.SYNTAX);
-        }
-        intvar.put(part_1,number);
     }
 
     public static void print(Statement s){
         System.out.println(s.getExpression()+s.getLabel()+s.getOperationType());
     }
+
+
+
 
 }
 
