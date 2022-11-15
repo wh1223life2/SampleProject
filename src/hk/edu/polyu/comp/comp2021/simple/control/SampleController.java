@@ -40,6 +40,12 @@ public class SampleController {
         return true;
     }
 
+    public static Statement findStatement(String newlabel) {
+        for (Statement p : total)
+            if (p.getLabel().equals(newlabel))
+                return p;
+        return new Statement("","","");
+    }
     public static void Testing(){
         for (Statement p : total)
             System.out.println(p.getOperationType() + " " + p.getLabel() + " " +p.getExpression());
