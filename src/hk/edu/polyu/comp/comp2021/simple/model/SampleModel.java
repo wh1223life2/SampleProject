@@ -3,6 +3,7 @@ package hk.edu.polyu.comp.comp2021.simple.model;
 
 import hk.edu.polyu.comp.comp2021.simple.control.ExceptionController;
 import hk.edu.polyu.comp.comp2021.simple.control.InterpreterException;
+import hk.edu.polyu.comp.comp2021.simple.control.SampleController;
 import jdk.vm.ci.meta.ExceptionHandler;
 
 import java.util.ArrayList;
@@ -13,6 +14,26 @@ public class SampleModel {
 
     public static HashMap<String, String> boolvar = new HashMap<>();
     public static HashMap<String, Integer> intvar = new HashMap<String, Integer>();
+
+    /*
+    检查expRef类型
+    0，1，2，3对应int bool Variable expression 其余抛出
+    未判断int上限问题（round to -99999 ~ 99999）
+     */
+    public static int checkRefType(String expRef) throws InterpreterException {
+        try {
+            Integer.parseInt(expRef);
+            return 0;
+        } catch (NumberFormatException e) {
+            if("true".equalsIgnoreCase(expRef) || "false".equalsIgnoreCase(expRef))
+                return 1;
+            else if(boolvar.containsKey(expRef) || intvar.containsKey(expRef))
+                return 2;
+            else if(!SampleController.checkUnique(expRef))
+                return 3;
+            else ExceptionController.handleErr(expRef,ExceptionController.NOEXPTP);
+        }
+    }
 
     public static void varDefine(Statement statement) throws InterpreterException {
 

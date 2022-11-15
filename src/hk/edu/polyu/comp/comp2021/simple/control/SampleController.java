@@ -28,7 +28,7 @@ public class SampleController {
         }*/
         else {
             temp2 = currentSub.nextToken();
-            ExceptionController.handleErr(temp2, ExceptionController.NOEXPTP);
+            ExceptionController.handleErr(temp2, ExceptionController.NOOPETP);
         }
     }
 

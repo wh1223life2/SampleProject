@@ -12,6 +12,7 @@ public class ExceptionController {
     public static final int DUPLABEL = 6;
     public static final int UNDEFLABEL = 7;
     public static final int UNDEFINEDVAR = 8;
+    public static final int NOOPETP = 9;
 
     public static void handleErr(String label, int error) throws InterpreterException
     {
@@ -25,6 +26,7 @@ public class ExceptionController {
                 "Duplicate label",
                 "Undefined label",
                 "Variable cannot be defined"
+                "Operate type dose not exist"
         };
         throw new InterpreterException("<" + label + "> " + err[error]);
     }
