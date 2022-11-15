@@ -4,7 +4,6 @@ package hk.edu.polyu.comp.comp2021.simple.model;
 import hk.edu.polyu.comp.comp2021.simple.control.ExceptionController;
 import hk.edu.polyu.comp.comp2021.simple.control.InterpreterException;
 import hk.edu.polyu.comp.comp2021.simple.control.SampleController;
-import jdk.vm.ci.meta.ExceptionHandler;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -33,6 +32,7 @@ public class SampleModel {
                 return 3;
             else ExceptionController.handleErr(expRef,ExceptionController.NOEXPTP);
         }
+        return -1;
     }
 
     public static void varDefine(Statement statement) throws InterpreterException {
