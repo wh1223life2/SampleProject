@@ -24,8 +24,8 @@ public class SampleModel {
         String variable = st.nextToken();
 
         Integer var = Integer.parseInt(variable);
-        if(name != "int"){ExceptionController.handleErr(expression,ExceptionController.NOVARTP);}
-        if(var %1 != 0){ExceptionController.handleErr(expression,ExceptionController.NOEXPTP);}
+        if(name != "int"){ExceptionController.handleErr(statement.getLabel(),ExceptionController.NOVARTP);}
+        if(var %1 != 0){ExceptionController.handleErr(statement.getLabel(),ExceptionController.NOEXPTP);}
 
         intvar.put(name,var);
 
@@ -102,7 +102,8 @@ public class SampleModel {
 
         String LHS = st.nextToken();
         String RHS = st.nextToken();
-
+        int RHS_value = binExpr(RHS);
+        intvar.put(LHS,RHS_value);
 
     }
 
@@ -110,6 +111,25 @@ public class SampleModel {
         System.out.println(s.getExpression()+s.getLabel()+s.getOperationType());
     }
 
+    public static void skip(Statement s){
+
+    }
+
+    public static boolean If(Statement s){
+        return true;
+    }
+
+    public static boolean block(Statement s){
+        if(If(s)) return true;
+
+        return false;
+    }
+
+    public static void While(Statement s){
+        while(block(s)){
+            assign(s);
+        }
+    }
 
 
 
