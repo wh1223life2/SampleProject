@@ -11,7 +11,7 @@ public class ExceptionController {
     public static final int UNDEFLABEL = 7;
     public static final int UNDEFINEDVAR = 8;
 
-    public static void handleErr(int error) throws InterpreterException
+    public static void handleErr(String label, int error) throws InterpreterException
     {
         String[] err = {
                 "Syntax Error",
@@ -24,6 +24,15 @@ public class ExceptionController {
                 "Undefined label",
                 "Variable cannot be defined"
         };
-        throw new InterpreterException(err[error]);
+        throw new InterpreterException("<" + label + ">" + err[error]);
+    }
+
+    /*
+    1.类型是否符合？
+    2.label是否重复（define）/label是否不存在？（run）
+    3.expression的表达是否属于该类型（合规？）-》只判断字符串数量 不判断分割后字符串内容是否合规
+     */
+    public static boolean checkLegal(String type, String rawstring){
+        if(SampleController.RunExecuteType.contains())
     }
 }
