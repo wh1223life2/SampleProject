@@ -8,6 +8,7 @@ import jdk.dynalink.Operation;
 import jdk.vm.ci.meta.ExceptionHandler;
 import sun.security.mscapi.CPublicKey;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.StringTokenizer;
@@ -39,6 +40,7 @@ public class SampleModel {
         return -1;
     }
 
+
     public static void varDefine(Statement statement) throws InterpreterException { //REQ1
 
         String expression = statement.getExpression();
@@ -57,6 +59,10 @@ public class SampleModel {
     }
 
     public static void binExpr(Statement s  /*,ArrayList<String> d*/) throws InterpreterException{ //REQ2
+        //LHS: RHS
+        //
+        //
+
 
         String expression = s.getExpression();
         StringTokenizer st = new StringTokenizer(expression," ");
@@ -69,10 +75,11 @@ public class SampleModel {
             if(!bop.equals(list[i])){ExceptionController.handleErr(s.getLabel(),ExceptionController.SYNTAX);}
         }
 
-        if(intvar.get(exp1) == null || intvar.get(exp2) == null){ExceptionController.handleErr(s.getLabel(),ExceptionController.NOTEXIST);}
+        if(intvar.get(exp1) == null || intvar.get(exp2) == null){ExceptionController.handleErr(s.getLabel(),ExceptionController.UNDEFINEDVAR);}
         int value_exp1 = intvar.get(exp1);
         int value_exp2 = intvar.get(exp2);
         int value = 0;
+
 
         if("%".equals(bop)){value = value_exp1 % value_exp2;}
         if("+".equals(bop)){value = value_exp1 + value_exp2;}
@@ -143,10 +150,64 @@ public class SampleModel {
         String LHS = st.nextToken();
         String RHS = st.nextToken();
 
-        if(intvar.get(RHS) == null){ExceptionController.handleErr(s.getLabel(),ExceptionController.UNDEFINEDVAR);}
-        int RHS_value = intvar.get(RHS);
 
-        intvar.put(LHS,RHS_value);
+        //condition 1 : LHS is int (int = int / int = variable / int = bool / int = expression) which are all wrong
+        if(checkRefType(LHS) == 0){ExceptionController.handleErr(s.getLabel(),ExceptionController.NOOPETP);}
+
+        //condition 2 : LHS is bool ( bool = int / bool = variable / bool = bool / bool = expression) which are all wrong
+        if(checkRefType(LHS) == 1){ExceptionController.handleErr(s.getLabel(),ExceptionController.NOOPETP);}
+
+        //condition 3 : LHS is variable (variable = int / variable = expression / variable = bool / variable = variable)
+        if(checkRefType(LHS) == 2){
+            // 1 : variable = int
+            if(checkRefType(RHS) == 0){
+                Integer RHS_value = Integer.parseInt(RHS);
+                intvar.put(LHS,RHS_value);
+            }
+
+            // 2 : variable = bool
+            if(checkRefType(RHS) == 1 ){
+                ExceptionController.handleErr(s.getLabel(),ExceptionController.SYNTAX);
+            }
+
+            // 3 : variable = variable
+            if(checkRefType(RHS) == 2){
+                if(intvar.get(RHS) == null){ExceptionController.handleErr(s.getLabel(),ExceptionController.UNDEFINEDVAR);}
+                int RHS_value = intvar.get(RHS);
+                intvar.put(LHS,RHS_value);
+            }
+
+            // 4 : variable = expression
+            if(checkRefType(RHS) == 3){
+
+            }
+        }
+
+        // condition 4 : LHS is expression ( expression = int / expression = expression / expression = bool / expression = variable )
+        if(checkRefType(LHS) == 3){
+            // 1 : expression = int
+            if(checkRefType(RHS) == 0){
+
+            }
+
+            // 2 : expression = bool
+            if(checkRefType(RHS) == 1){
+
+            }
+
+            // 3 : expression = variable
+            if(checkRefType(RHS) == 2){
+
+            }
+
+            // 4 : expression = expression
+            if(checkRefType(RHS) == 3){
+
+            }
+        }
+
+
+
 
     }
 
