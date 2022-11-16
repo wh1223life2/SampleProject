@@ -79,7 +79,7 @@ public class SampleModel {
         return false;
     }
 
-    public static int binExpr(Statement s) throws InterpreterException{ //REQ2
+    public static String binExpr(Statement s) throws InterpreterException{ //REQ2
 
         String expression = s.getExpression();
         StringTokenizer st = new StringTokenizer(expression," ");
@@ -89,7 +89,7 @@ public class SampleModel {
         String exp2 = st.nextToken();
         String[] list = {"%","+","-","*","/",">",">=","<","<=","==","!="};
         for(int i = 0; i < list.length; i++){
-            if(!bop.equals(list[i])){ExceptionController.handleErr(s.getLabel(),ExceptionController.NOOPETP);}
+            if(!bop.equals(list[i])){ExceptionController.handleErr(s.getLabel(),ExceptionController.NOTBINOP);}
         }
 
 
@@ -100,7 +100,7 @@ public class SampleModel {
             if(checkRefType(exp1) == 0 && checkRefType(exp2) == 0){
                 Integer value_exp1 = Integer.parseInt(exp1);
                 Integer value_exp2 = Integer.parseInt(exp2);
-                return calculator(bop,value_exp1,value_exp2);
+                return String.valueOf(calculator(bop,value_exp1,value_exp2));
             }
 
             // condition 2 : exp1 = variable , exp2 = int
@@ -108,7 +108,7 @@ public class SampleModel {
                 if(intvar.get(exp1) == null)ExceptionController.handleErr(s.getLabel(),ExceptionController.UNDEFINEDVAR);
                 int value_exp1 = intvar.get(exp1);
                 Integer value_exp2 = Integer.parseInt(exp2);
-                return calculator(bop,value_exp1,value_exp2);
+                return String.valueOf(calculator(bop,value_exp1,value_exp2));
             }
 
             // condition 3 : exp1 = int, exp2 = variable
@@ -116,7 +116,7 @@ public class SampleModel {
                 if(intvar.get(exp2) == null)ExceptionController.handleErr(s.getLabel(),ExceptionController.UNDEFINEDVAR);
                 int value_exp2 = intvar.get(exp2);
                 Integer value_exp1 = Integer.parseInt(exp1);
-                return calculator(bop,value_exp1,value_exp2);
+                return String.valueOf(calculator(bop,value_exp1,value_exp2));
             }
 
             // condition 4 : exp1 = variable , exp2 = variable
@@ -124,7 +124,7 @@ public class SampleModel {
                 if(intvar.get(exp1) == null || intvar.get(exp2) == null)ExceptionController.handleErr(s.getLabel(),ExceptionController.UNDEFINEDVAR);
                 int value_exp1 = intvar.get(exp1);
                 int value_exp2 = intvar.get(exp2);
-                return calculator(bop,value_exp1,value_exp2);
+                return String.valueOf(calculator(bop,value_exp1,value_exp2));
             }
 
             // condition 5 : exp1 or exp2 = bool
@@ -132,25 +132,50 @@ public class SampleModel {
             if(checkRefType(exp2) == 1){ExceptionController.handleErr(s.getLabel(),ExceptionController.NOTVAR);}
 
 
-            // condition 6 : exp1 = expression, exp = int
+            // condition 6 : exp1 = expression, exp2 = int
             if(checkRefType(exp1) == 3 && checkRefType(exp2) == 0){
-                int value_exp1 = binExpr(SampleController.findStatement(exp1));
-                Integer value_exp2 = Integer.parseInt(exp2);
-                return calculator(bop,value_exp1,value_exp2);
+                if(SampleController.findStatement(exp1).getOperationType().equals("binexpr")){
+                    if(checkRefType(binExpr(SampleController.findStatement(exp1))) == 0){
+                        String value = binExpr(SampleController.findStatement(exp1));
+
+                        Integer value_exp1 = Integer.parseInt(value);
+                        Integer value_exp2 = Integer.parseInt(exp2);
+
+                        return String.valueOf(calculator(bop,value_exp1,value_exp2));
+                    }
+                }
+                else ExceptionController.handleErr(s.getLabel(),ExceptionController.NOOPETP);
             }
 
-            // condition 7 : exp1 = int, exp = expression
+            // condition 7 : exp1 = int, exp2 = expression
             if(checkRefType(exp1) == 0 && checkRefType(exp2) == 3){
-                int value_exp1 = Integer.parseInt(exp1);
-                Integer value_exp2 = binExpr(SampleController.findStatement(exp2));
-                return calculator(bop,value_exp1,value_exp2);
+                if(SampleController.findStatement(exp2).getOperationType().equals("binexpr")){
+                    if(checkRefType(binExpr(SampleController.findStatement(exp2))) == 0){
+                        String value = binExpr(SampleController.findStatement(exp2));
+
+                        Integer value_exp1 = Integer.parseInt(exp1);
+                        Integer value_exp2 = Integer.parseInt(value);
+
+                        return String.valueOf(calculator(bop,value_exp1,value_exp2));
+                    }
+                }
+                else ExceptionController.handleErr(s.getLabel(),ExceptionController.NOOPETP);
             }
 
             // condition 8 : exp1 = expression, exp2 = expression
             if(checkRefType(exp1) == 3 && checkRefType(exp2) == 3){
-                int value_exp1 = Integer.parseInt(exp1);
-                int value_exp2 = Integer.parseInt(exp2);
-                return calculator(bop,value_exp1,value_exp2);
+                if(SampleController.findStatement(exp1).getOperationType().equals("binexpr") && SampleController.findStatement(exp2).getOperationType().equals("binexpr")){
+                    if(checkRefType(binExpr(SampleController.findStatement(exp1))) == 0 && checkRefType(binExpr(SampleController.findStatement(exp2))) == 0){
+                        String value1 = binExpr(SampleController.findStatement(exp1));
+                        String value2 = binExpr(SampleController.findStatement(exp2));
+
+                        Integer value_exp1 = Integer.parseInt(value1);
+                        Integer value_exp2 = Integer.parseInt(value2);
+
+                        return String.valueOf(calculator(bop,value_exp1,value_exp2));
+                    }
+                }
+                else ExceptionController.handleErr(s.getLabel(),ExceptionController.NOOPETP);
             }
         }
 
@@ -160,12 +185,11 @@ public class SampleModel {
         // comparison
         // ------------------------------------------------------------------------------------------------------------------------------------------------------
         if( bop.equals(">") || bop.equals(">=") || bop.equals("<") || bop.equals("<=") || bop.equals("==") || bop.equals("!=")){
+            // condition 1 : exp1 = int , exp2 = int
             if(checkRefType(exp1) == 0 && checkRefType(exp2) == 0){
                 Integer value_exp1 = Integer.parseInt(exp1);
                 Integer value_exp2 = Integer.parseInt(exp2);
-                if(comparison(bop,value_exp1,value_exp2)){boolvar.put(expression,"1");}
-                if(!comparison(bop,value_exp1,value_exp2)){boolvar.put(expression,"0");}
-
+                return String.valueOf(comparison(bop,value_exp1,value_exp2));
             }
 
             // condition 2 : exp1 = variable , exp2 = int
@@ -173,8 +197,7 @@ public class SampleModel {
                 if(intvar.get(exp1) == null)ExceptionController.handleErr(s.getLabel(),ExceptionController.UNDEFINEDVAR);
                 int value_exp1 = intvar.get(exp1);
                 Integer value_exp2 = Integer.parseInt(exp2);
-                if(comparison(bop,value_exp1,value_exp2)){boolvar.put(expression,"1");}
-                if(!comparison(bop,value_exp1,value_exp2)){boolvar.put(expression,"0");}
+                return String.valueOf(comparison(bop,value_exp1,value_exp2));
             }
 
             // condition 3 : exp1 = int, exp2 = variable
@@ -182,8 +205,7 @@ public class SampleModel {
                 if(intvar.get(exp2) == null)ExceptionController.handleErr(s.getLabel(),ExceptionController.UNDEFINEDVAR);
                 int value_exp2 = intvar.get(exp2);
                 Integer value_exp1 = Integer.parseInt(exp1);
-                if(comparison(bop,value_exp1,value_exp2)){boolvar.put(expression,"1");}
-                if(!comparison(bop,value_exp1,value_exp2)){boolvar.put(expression,"0");}
+                return String.valueOf(comparison(bop,value_exp1,value_exp2));
             }
 
             // condition 4 : exp1 = variable , exp2 = variable
@@ -191,8 +213,7 @@ public class SampleModel {
                 if(intvar.get(exp1) == null || intvar.get(exp2) == null)ExceptionController.handleErr(s.getLabel(),ExceptionController.UNDEFINEDVAR);
                 int value_exp1 = intvar.get(exp1);
                 int value_exp2 = intvar.get(exp2);
-                if(comparison(bop,value_exp1,value_exp2)){boolvar.put(expression,"1");}
-                if(!comparison(bop,value_exp1,value_exp2)){boolvar.put(expression,"0");}
+                return String.valueOf(comparison(bop,value_exp1,value_exp2));
             }
 
             // condition 5 : exp1 or exp2 = bool
@@ -200,32 +221,54 @@ public class SampleModel {
             if(checkRefType(exp2) == 1){ExceptionController.handleErr(s.getLabel(),ExceptionController.NOTVAR);}
 
 
-            // condition 6 : exp1 = expression, exp = int
+            // condition 6 : exp1 = expression, exp2 = int
             if(checkRefType(exp1) == 3 && checkRefType(exp2) == 0){
-                int value_exp1 = binExpr(SampleController.findStatement(exp1));
-                Integer value_exp2 = Integer.parseInt(exp2);
-                if(comparison(bop,value_exp1,value_exp2)){boolvar.put(expression,"1");}
-                if(!comparison(bop,value_exp1,value_exp2)){boolvar.put(expression,"0");}
+                if(SampleController.findStatement(exp1).getOperationType().equals("binexpr")){
+                    if(checkRefType(binExpr(SampleController.findStatement(exp1))) == 1){
+                        String value = binExpr(SampleController.findStatement(exp1));
+
+                        Integer value_exp1 = Integer.parseInt(value);
+                        Integer value_exp2 = Integer.parseInt(exp2);
+
+                        return String.valueOf(comparison(bop,value_exp1,value_exp2));
+                    }
+                }
+                else ExceptionController.handleErr(s.getLabel(),ExceptionController.NOOPETP);
             }
 
-            // condition 7 : exp1 = int, exp = expression
+            // condition 7 : exp1 = int, exp2 = expression
             if(checkRefType(exp1) == 0 && checkRefType(exp2) == 3){
-                int value_exp1 = Integer.parseInt(exp1);
-                Integer value_exp2 = binExpr(SampleController.findStatement(exp2));
-                if(comparison(bop,value_exp1,value_exp2)){boolvar.put(expression,"1");}
-                if(!comparison(bop,value_exp1,value_exp2)){boolvar.put(expression,"0");}
+                if(SampleController.findStatement(exp2).getOperationType().equals("binexpr")){
+                    if(checkRefType(binExpr(SampleController.findStatement(exp2))) == 1){
+                        String value = binExpr(SampleController.findStatement(exp2));
+
+                        Integer value_exp1 = Integer.parseInt(exp1);
+                        Integer value_exp2 = Integer.parseInt(value);
+
+                        return String.valueOf(comparison(bop,value_exp1,value_exp2));
+                    }
+                }
+                else ExceptionController.handleErr(s.getLabel(),ExceptionController.NOOPETP);
             }
 
             // condition 8 : exp1 = expression, exp2 = expression
             if(checkRefType(exp1) == 3 && checkRefType(exp2) == 3){
-                int value_exp1 = Integer.parseInt(exp1);
-                int value_exp2 = Integer.parseInt(exp2);
-                if(comparison(bop,value_exp1,value_exp2)){boolvar.put(expression,"1");}
-                if(!comparison(bop,value_exp1,value_exp2)){boolvar.put(expression,"0");}
+                if(SampleController.findStatement(exp1).getOperationType().equals("binexpr") && SampleController.findStatement(exp2).getOperationType().equals("binexpr")){
+                    if(checkRefType(binExpr(SampleController.findStatement(exp1))) == 1 && checkRefType(binExpr(SampleController.findStatement(exp2))) == 1){
+                        String value1 = binExpr(SampleController.findStatement(exp1));
+                        String value2 = binExpr(SampleController.findStatement(exp2));
+
+                        Integer value_exp1 = Integer.parseInt(value1);
+                        Integer value_exp2 = Integer.parseInt(value2);
+
+                        return String.valueOf(comparison(bop,value_exp1,value_exp2));
+                    }
+                }
+                else ExceptionController.handleErr(s.getLabel(),ExceptionController.NOOPETP);
             }
         }
         // ------------------------------------------------------------------------------------------------------------------------------------------------------
-        return 0;
+        return "";
 
     }
 
@@ -290,10 +333,6 @@ public class SampleModel {
 
         // condition 4 : LHS is expression ( expression = int / expression = expression / expression = bool / expression = variable )
         if(checkRefType(LHS) == 3){ExceptionController.handleErr(s.getLabel(),ExceptionController.NOTVAR);}
-
-
-
-
 
     }
 
