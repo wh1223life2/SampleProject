@@ -273,21 +273,70 @@ public class SampleModel {
     }
 
     public static String unExpr(Statement s) throws InterpreterException { //REQ3
-        int n = s.getExpression().indexOf("+");
-        int k = s.getExpression().indexOf("-");
-        if(k>0){
-            Integer a = Integer.parseInt(s.getExpression().substring(0,k))-Integer.parseInt(s.getExpression().substring(k+1));
-            intvar.put("-",a);
-        }
-        if(n>0){
-            Integer a = Integer.parseInt(s.getExpression().substring(0,k))+Integer.parseInt(s.getExpression().substring(k+1));
-            intvar.put("+",a);
+        String expression = s.getExpression();
+        StringTokenizer st = new StringTokenizer(expression," ");
+
+        String a = st.nextToken();
+        String b = st.nextToken();
+
+        // condition 1 : pre_increment and pre_decrease
+        if(a.equals("~") || a.equals("#")){
+            // 1 : b is int
+            if(checkRefType(b) == 0){
+                Integer b_value = Integer.parseInt(b);
+                return String.valueOf(b_value + 1);
+            }
+            // 2 : b is bool
+            if(checkRefType(b) == 1){
+                ExceptionController.handleErr(s.getLabel(),ExceptionController.SYNTAX);
+            }
+            // 3 : b is variable
+            if(checkRefType(b) == 2){
+                if(intvar.get(b) == null){ExceptionController.handleErr(s.getLabel(),ExceptionController.UNDEFINEDVAR);}
+                int b_value = intvar.get(b);
+                return String.valueOf(b_value + 1);
+            }
+            // 4 : b is expression
+            if(checkRefType(b) == 3){
+                if(SampleController.findStatement(b).equals("binexpr") ){
+                    if(checkRefType(binExpr(SampleController.findStatement(b))) == 0){
+                        String value = binExpr(SampleController.findStatement(b));
+                        Integer b_value = Integer.parseInt(value);
+                        return String.valueOf(b_value + 1);
+                    }
+                }
+            }
         }
 
-        /*if(Varname.type == int)
-        handle-》Varcontent
-                else ...
-        return Varname,Varcontent; (pair)*/
+        // condition 2 : post_increment and post_decrease
+        if(b.equals("~") || b.equals("#")){
+            // 1 : b is int
+            if(checkRefType(b) == 0){
+                Integer b_value = Integer.parseInt(b);
+                return String.valueOf(b_value - 1);
+            }
+            // 2 : b is bool
+            if(checkRefType(b) == 1){
+                ExceptionController.handleErr(s.getLabel(),ExceptionController.SYNTAX);
+            }
+            // 3 : b is variable
+            if(checkRefType(b) == 2){
+                if(intvar.get(b) == null){ExceptionController.handleErr(s.getLabel(),ExceptionController.UNDEFINEDVAR);}
+                int b_value = intvar.get(b);
+                return String.valueOf(b_value - 1);
+            }
+            // 4 : b is expression
+            if(checkRefType(b) == 3){
+                if(SampleController.findStatement(b).equals("binexpr") ){
+                    if(checkRefType(binExpr(SampleController.findStatement(b))) == 0){
+                        String value = binExpr(SampleController.findStatement(b));
+                        Integer b_value = Integer.parseInt(value);
+                        return String.valueOf(b_value - 1);
+                    }
+                }
+            }
+        }
+        return "";
     }
 
     public static void assign(Statement s) throws InterpreterException{ //REQ4
@@ -326,8 +375,13 @@ public class SampleModel {
 
             // 4 : variable = expression
             if(checkRefType(RHS) == 3){
-                int RHS_value = binExpr(SampleController.findStatement(RHS));
-                intvar.put(LHS,RHS_value);
+                if(SampleController.findStatement(RHS).getOperationType().equals("binexpr")){
+                    if(checkRefType(binExpr(SampleController.findStatement(RHS))) == 0){
+                        String value = binExpr(SampleController.findStatement(RHS));
+                        Integer RHS_value = Integer.parseInt(value);
+                        intvar.put(LHS,RHS_value);
+                    }
+                }
             }
         }
 

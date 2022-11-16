@@ -27,9 +27,9 @@ public class ExceptionController {
                 "Not a variable",
                 "Duplicate label",
                 "Undefined label",
-                "Variable cannot be defined"
-                "Operate type dose not exist"
-                "Binary operator is not defined"
+                "Variable cannot be defined",
+                "Operate type dose not exist",
+                "Operator is not defined"
 
         };
         throw new InterpreterException("<" + label + "> " + err[error]);
