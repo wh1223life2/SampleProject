@@ -4,11 +4,6 @@ package hk.edu.polyu.comp.comp2021.simple.model;
 import hk.edu.polyu.comp.comp2021.simple.control.ExceptionController;
 import hk.edu.polyu.comp.comp2021.simple.control.InterpreterException;
 import hk.edu.polyu.comp.comp2021.simple.control.SampleController;
-import jdk.dynalink.Operation;
-import jdk.vm.ci.meta.ExceptionHandler;
-import sun.security.mscapi.CPublicKey;
-
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.StringTokenizer;
@@ -17,6 +12,10 @@ public class SampleModel {
 
     public static HashMap<String, String> boolvar = new HashMap<>();
     public static HashMap<String, Integer> intvar = new HashMap<String, Integer>();
+
+    /*
+    表达式与expression命名规范 数字不开头 最多八位    需判断  未完成**
+     */
 
     /*
     检查expRef类型
@@ -38,7 +37,11 @@ public class SampleModel {
         }
         return -1;
     }
-
+    /*
+    define注意区分int 与 var
+    定义时如果当前为bool 也要查一下int里面有没有同名的  ****未完成
+    不允许同名！即使是不同类型
+     */
 
     public static void varDefine(Statement statement) throws InterpreterException { //REQ1
 
@@ -226,7 +229,7 @@ public class SampleModel {
 
     }
 
-    public static void unExpr(Statement s) throws InterpreterException { //REQ3
+    public static String unExpr(Statement s) throws InterpreterException { //REQ3
         int n = s.getExpression().indexOf("+");
         int k = s.getExpression().indexOf("-");
         if(k>0){
@@ -294,29 +297,60 @@ public class SampleModel {
 
     }
 
-    public static void print(Statement s){
-        System.out.println(s.getExpression()+s.getLabel()+s.getOperationType());
-    }
-
-    public static void skip(Statement s){
-
-    }
-
-    public static void block(Statement s){ //REQ7
-
-    }
-
-    public static boolean block(Statement s){
-        if(If(s)) return true;
-
-    }
-
-    public static void While(Statement s){
-        while(block(s)){
-            assign(s);
+    public static void print(Statement s) throws InterpreterException {//REQ5
+        String expression = s.getExpression();
+        if(checkRefType(expression) == 0 || checkRefType(expression) == 1)
+            System.out.println("["+expression+"] ");
+        else if(checkRefType(expression) == 2)
+        System.out.println("[" + (intvar.containsKey(expression) ? intvar.get(expression) : boolvar.get(expression)) + "] ");
+        else {
+            Statement S1 = SampleController.findStatement(expression);
+            String type = S1.getOperationType();
+            if(type == "binexpr") System.out.println("[" + binExpr(S1) + "] ");
+            else System.out.println("[" + unExpr(S1) + "]");
         }
     }
 
+    public static void skip(Statement s){//REQ6
+        return;
+    }
+
+    public static void block(Statement s) throws InterpreterException {//REQ7
+        String expression = s.getExpression();
+        String[] labs = expression.split(" ");
+        for(int i = 0;i < labs.length; i++){
+            if(!SampleController.checkUnique(labs[i])){
+                Statement S1 = SampleController.findStatement(labs[i]);
+                String Type = S1.getOperationType();
+                switch (Type){
+                    case "vardef":
+                        varDefine(S1);
+                        break;
+                    case "assign":
+                        assign(S1);
+                        break;
+                    case "print":
+                        print(S1);
+                        break;
+                    case "skip":
+                        skip(S1);
+                        break;
+                    case "block":
+                        block(S1);
+                        break;
+                    case "if":
+                        if(S1);
+                        break;
+                    case "while":
+                        while(S1);
+                        break;
+                    default:
+                        ExceptionController.handleErr(labs[i],ExceptionController.UNDEFLABEL);
+                }
+            }
+            else ExceptionController.handleErr(labs[i],ExceptionController.UNDEFLABEL);
+        }
+    }
 
 
 }
