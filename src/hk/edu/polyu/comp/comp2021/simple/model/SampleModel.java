@@ -43,7 +43,7 @@ public class SampleModel {
     不允许同名！即使是不同类型
      */
 
-    public static void varDefine(Statement statement) throws InterpreterException { //REQ1
+    public static void varDefine(Statement statement) throws InterpreterException { //REQ1 (not finished)
 
         String expression = statement.getExpression();
         StringTokenizer st = new StringTokenizer(expression," ");
