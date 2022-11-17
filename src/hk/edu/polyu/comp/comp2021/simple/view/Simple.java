@@ -13,7 +13,7 @@ public class Simple{
             System.out.print(">");
             Scanner sc = new Scanner(System.in);
             String statement = sc.nextLine();
-            if(statement.equals("quit")){
+            if(statement.equals("quit")){//req15
                 EOF = true;
                 sc.close();
             }

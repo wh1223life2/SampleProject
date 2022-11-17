@@ -10,7 +10,7 @@ import java.util.StringTokenizer;
 
 public class SampleModel {
 
-    public static HashMap<String, String> boolvar = new HashMap<>();
+    public static HashMap<String, Boolean> boolvar = new HashMap<>();
     public static HashMap<String, Integer> intvar = new HashMap<String, Integer>();
 
     /*
@@ -36,6 +36,38 @@ public class SampleModel {
             else ExceptionController.handleErr(expRef,ExceptionController.NOEXPTP);
         }
         return -1;
+    }
+    public static void ExecuteStatement(String newlabel) throws InterpreterException {
+        if(!SampleController.checkUnique(newlabel)){
+            Statement S1 = SampleController.findStatement(newlabel);
+            String Type = S1.getOperationType();
+            switch (Type){
+                case "vardef":
+                    varDefine(S1);
+                    break;
+                case "assign":
+                    assign(S1);
+                    break;
+                case "print":
+                    print(S1);
+                    break;
+                case "skip":
+                    skip(S1);
+                    break;
+                case "block":
+                    block(S1);
+                    break;
+                case "if":
+                    ifOperation(S1);
+                    break;
+                case "while":
+                    whileOperation(S1);
+                    break;
+                default:
+                    ExceptionController.handleErr(newlabel,ExceptionController.UNDEFLABEL);
+            }
+        }
+        else ExceptionController.handleErr(newlabel,ExceptionController.UNDEFLABEL);
     }
     /*
     define注意区分int 与 var
@@ -400,7 +432,8 @@ public class SampleModel {
             Statement S1 = SampleController.findStatement(expression);
             String type = S1.getOperationType();
             if(type == "binexpr") System.out.println("[" + binExpr(S1) + "] ");
-            else System.out.println("[" + unExpr(S1) + "]");
+            else if(type == "unexpr") System.out.println("[" + unExpr(S1) + "]");
+            else ExceptionController.handleErr();
         }
     }
 
@@ -411,41 +444,74 @@ public class SampleModel {
     public static void block(Statement s) throws InterpreterException {//REQ7
         String expression = s.getExpression();
         String[] labs = expression.split(" ");
-        for(int i = 0;i < labs.length; i++){
-            if(!SampleController.checkUnique(labs[i])){
-                Statement S1 = SampleController.findStatement(labs[i]);
-                String Type = S1.getOperationType();
-                switch (Type){
-                    case "vardef":
-                        varDefine(S1);
-                        break;
-                    case "assign":
-                        assign(S1);
-                        break;
-                    case "print":
-                        print(S1);
-                        break;
-                    case "skip":
-                        skip(S1);
-                        break;
-                    case "block":
-                        block(S1);
-                        break;
-                    case "if":
-                        if(S1);
-                        break;
-                    case "while":
-                        while(S1);
-                        break;
-                    default:
-                        ExceptionController.handleErr(labs[i],ExceptionController.UNDEFLABEL);
-                }
-            }
-            else ExceptionController.handleErr(labs[i],ExceptionController.UNDEFLABEL);
-        }
+        for(int i = 0;i < labs.length; i++)
+            ExecuteStatement(labs[i]);
     }
 
+    public static void ifOperation(Statement s) throws InterpreterException {//REQ8
+        String expression = s.getExpression();
+        StringTokenizer str = new StringTokenizer(expression," ");
 
+        String condition = str.nextToken();
+        String trueExecute = str.nextToken();
+        String falseExecute = str.nextToken();
+
+        boolean Result = true;
+        if(checkRefType(condition) == 1)
+            Result = Boolean.valueOf(condition);
+        else if(checkRefType(condition) == 3){
+            Statement expStatement = SampleController.findStatement(condition);
+            String judgetype = expStatement.getOperationType();
+            if(judgetype == "binexpr")
+                Result = (checkRefType(binExpr(expStatement))==1) ? Boolean.valueOf(binExpr(expStatement)): false;
+            else if(judgetype == "unexpr")
+                Result = (checkRefType(unExpr(expStatement)) == 1) ? Boolean.valueOf(unExpr(expStatement)) : false;
+            else ExceptionController.handleErr(condition, ExceptionController.EXPTPWRONG);
+        }
+        else Result = false;
+        if(Result == true)
+            ExecuteStatement(trueExecute);
+        else ExecuteStatement(falseExecute);
+    }
+
+    public static void whileOperation(Statement s) throws InterpreterException {//REQ9
+        String expression = s.getExpression();
+        StringTokenizer str = new StringTokenizer(expression," ");
+
+        String condition = str.nextToken();
+        String trueExecute = str.nextToken();
+
+        boolean Result = true;
+        if(checkRefType(condition) == 1)
+            Result = Boolean.valueOf(condition);
+        else if(checkRefType(condition) == 3){
+            Statement expStatement = SampleController.findStatement(condition);
+            String judgetype = expStatement.getOperationType();
+            if(judgetype == "binexpr")
+                Result = (checkRefType(binExpr(expStatement))==1) ? Boolean.valueOf(binExpr(expStatement)): false;
+            else if(judgetype == "unexpr")
+                Result = (checkRefType(unExpr(expStatement)) == 1) ? Boolean.valueOf(unExpr(expStatement)) : false;
+            else ExceptionController.handleErr(condition, ExceptionController.EXPTPWRONG);
+        }
+        else Result = false;
+        while(Result){
+            ExecuteStatement(trueExecute);
+
+            if(checkRefType(condition) == 1)
+                Result = Boolean.valueOf(condition);
+            else if(checkRefType(condition) == 3){
+                Statement expStatement = SampleController.findStatement(condition);
+                String judgetype = expStatement.getOperationType();
+                if(judgetype == "binexpr")
+                    Result = (checkRefType(binExpr(expStatement))==1) ? Boolean.valueOf(binExpr(expStatement)): false;
+                else if(judgetype == "unexpr")
+                    Result = (checkRefType(unExpr(expStatement)) == 1) ? Boolean.valueOf(unExpr(expStatement)) : false;
+                else ExceptionController.handleErr(condition, ExceptionController.EXPTPWRONG);
+            }
+            else Result = false;
+
+        }
+    }
 }
 
 
