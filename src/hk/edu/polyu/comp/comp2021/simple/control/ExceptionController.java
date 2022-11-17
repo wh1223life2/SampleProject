@@ -14,6 +14,8 @@ public class ExceptionController {
     public static final int UNDEFINEDVAR = 8;
     public static final int NOOPETP = 9;
 
+    public static final int NOTBINOP = 10;
+
     public static void handleErr(String label, int error) throws InterpreterException
     {
         String[] err = {
@@ -25,8 +27,10 @@ public class ExceptionController {
                 "Not a variable",
                 "Duplicate label",
                 "Undefined label",
-                "Variable cannot be defined"
-                "Operate type dose not exist"
+                "Variable cannot be defined",
+                "Operate type dose not exist",
+                "Operator is not defined"
+
         };
         throw new InterpreterException("<" + label + "> " + err[error]);
     }
