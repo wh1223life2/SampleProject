@@ -11,6 +11,9 @@ public class RunController {
         String label = st.nextToken();
         if(SampleController.Program.containsKey(programname))
             ExceptionController.handleErr(programname,ExceptionController.DUPNAME);
-        else SampleController.Program.put(programname,label);
+        else {
+           // System.out.println(programname+ " "+label);
+            SampleController.Program.put(programname,label);
+        }
     }
 }

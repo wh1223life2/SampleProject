@@ -38,6 +38,7 @@ public class SampleModel {
         return -1;
     }
     public static void ExecuteStatement(String newlabel) throws InterpreterException {
+        System.out.println(newlabel);
         if(!SampleController.checkUnique(newlabel)){
             Statement S1 = SampleController.findStatement(newlabel);
             String Type = S1.getOperationType();
@@ -530,7 +531,7 @@ public class SampleModel {
             String type = S1.getOperationType();
             if(type == "binexpr") System.out.println("[" + binExpr(S1) + "] ");
             else if(type == "unexpr") System.out.println("[" + unExpr(S1) + "]");
-            else ExceptionController.handleErr();
+            else ExceptionController.handleErr(expression, ExceptionController.EXPTPWRONG);
         }
     }
 
