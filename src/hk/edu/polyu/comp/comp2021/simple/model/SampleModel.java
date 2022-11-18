@@ -109,9 +109,11 @@ public class SampleModel {
         }
     }
 
-    public static int calculator(String bop, int value_exp1, int value_exp2){
+    public static int calculator(Statement s,String bop, int value_exp1, int value_exp2) throws InterpreterException{
         if(bop.equals("%")){return value_exp1 % value_exp2;}
-        else if(bop.equals("+")){return value_exp1 + value_exp2;}
+        else if(bop.equals("+")){
+            if(value_exp2 == 0)ExceptionController.handleErr(s.getLabel(),ExceptionController.EQUALEXPECTED);
+            return value_exp1 + value_exp2;}
         else if(bop.equals("-")){return value_exp1 - value_exp2;}
         else if(bop.equals("*")){return value_exp1 * value_exp2;}
         else if(bop.equals("/")){return value_exp1 / value_exp2;}
@@ -149,7 +151,7 @@ public class SampleModel {
             if(checkRefType(exp1) == 0 && checkRefType(exp2) == 0){
                 Integer value_exp1 = Integer.parseInt(exp1);
                 Integer value_exp2 = Integer.parseInt(exp2);
-                return String.valueOf(calculator(bop,value_exp1,value_exp2));
+                return String.valueOf(calculator(s,bop,value_exp1,value_exp2));
             }
 
             // condition 2 : exp1 = variable , exp2 = int
@@ -157,7 +159,7 @@ public class SampleModel {
                 if(intvar.get(exp1) == null)ExceptionController.handleErr(s.getLabel(),ExceptionController.UNDEFINEDVAR);
                 int value_exp1 = intvar.get(exp1);
                 Integer value_exp2 = Integer.parseInt(exp2);
-                return String.valueOf(calculator(bop,value_exp1,value_exp2));
+                return String.valueOf(calculator(s,bop,value_exp1,value_exp2));
             }
 
             // condition 3 : exp1 = int, exp2 = variable
@@ -165,7 +167,7 @@ public class SampleModel {
                 if(intvar.get(exp2) == null)ExceptionController.handleErr(s.getLabel(),ExceptionController.UNDEFINEDVAR);
                 int value_exp2 = intvar.get(exp2);
                 Integer value_exp1 = Integer.parseInt(exp1);
-                return String.valueOf(calculator(bop,value_exp1,value_exp2));
+                return String.valueOf(calculator(s,bop,value_exp1,value_exp2));
             }
 
             // condition 4 : exp1 = variable , exp2 = variable
@@ -173,7 +175,7 @@ public class SampleModel {
                 if(intvar.get(exp1) == null || intvar.get(exp2) == null)ExceptionController.handleErr(s.getLabel(),ExceptionController.UNDEFINEDVAR);
                 int value_exp1 = intvar.get(exp1);
                 int value_exp2 = intvar.get(exp2);
-                return String.valueOf(calculator(bop,value_exp1,value_exp2));
+                return String.valueOf(calculator(s,bop,value_exp1,value_exp2));
             }
 
             // condition 5 : exp1 or exp2 = bool
@@ -190,7 +192,7 @@ public class SampleModel {
                         Integer value_exp1 = Integer.parseInt(value);
                         Integer value_exp2 = Integer.parseInt(exp2);
 
-                        return String.valueOf(calculator(bop,value_exp1,value_exp2));
+                        return String.valueOf(calculator(s,bop,value_exp1,value_exp2));
                     }
                 }
                 else ExceptionController.handleErr(s.getLabel(),ExceptionController.NOOPETP);
@@ -205,7 +207,7 @@ public class SampleModel {
                         Integer value_exp1 = Integer.parseInt(exp1);
                         Integer value_exp2 = Integer.parseInt(value);
 
-                        return String.valueOf(calculator(bop,value_exp1,value_exp2));
+                        return String.valueOf(calculator(s,bop,value_exp1,value_exp2));
                     }
                 }
                 else ExceptionController.handleErr(s.getLabel(),ExceptionController.NOOPETP);
@@ -221,7 +223,7 @@ public class SampleModel {
                         Integer value_exp1 = Integer.parseInt(value1);
                         Integer value_exp2 = Integer.parseInt(value2);
 
-                        return String.valueOf(calculator(bop,value_exp1,value_exp2));
+                        return String.valueOf(calculator(s,bop,value_exp1,value_exp2));
                     }
                 }
                 else ExceptionController.handleErr(s.getLabel(),ExceptionController.NOOPETP);
@@ -266,8 +268,8 @@ public class SampleModel {
             }
 
             // condition 5 : exp1 or exp2 = bool
-            if(checkRefType(exp1) == 1){ExceptionController.handleErr(s.getLabel(),ExceptionController.NOTVAR);}
-            if(checkRefType(exp2) == 1){ExceptionController.handleErr(s.getLabel(),ExceptionController.NOTVAR);}
+            if(checkRefType(exp1) == 1){ExceptionController.handleErr(s.getLabel(),ExceptionController.SYNTAX);}
+            if(checkRefType(exp2) == 1){ExceptionController.handleErr(s.getLabel(),ExceptionController.SYNTAX);}
 
 
             // condition : exp1 = bool , exp2 = expression
