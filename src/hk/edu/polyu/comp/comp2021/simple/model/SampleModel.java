@@ -84,12 +84,29 @@ public class SampleModel {
         String name = st.nextToken();
         String variable = st.nextToken();
 
-        Integer var = Integer.parseInt(variable);
-        if(name != "int"){ExceptionController.handleErr(statement.getLabel(),ExceptionController.NOVARTP);}
-        if(var %1 != 0){ExceptionController.handleErr(statement.getLabel(),ExceptionController.NOEXPTP);}
-
-        intvar.put(name,var);
-
+        if(variable!="true"||variable!="false"){
+            Integer var = Integer.parseInt(variable);
+            if(type != "int" || type != "boolean") {
+                ExceptionController.handleErr(statement.getLabel(),ExceptionController.NOVARTP);
+            }
+            if(var %1 != 0){
+                ExceptionController.handleErr(statement.getLabel(),ExceptionController.NOEXPTP);
+            }
+            if(type=="int" && var%1==0){
+                intvar.put(name,var);
+            }
+        }
+        else if(variable=="true"||variable=="false"){
+            if(type != "int" || type != "boolean") {
+                ExceptionController.handleErr(statement.getLabel(),ExceptionController.NOVARTP);
+            }
+            if(variable=="true"){
+                boolvar.put(name,true);
+            }
+            if(variable=="false"){
+                boolvar.put(name,false);
+            }
+        }
     }
 
     public static int calculator(String bop, int value_exp1, int value_exp2){
