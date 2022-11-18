@@ -16,6 +16,8 @@ public class ExceptionController {
 
     public static final int NOTBINOP = 10;
 
+    public static final int EXPTPWRONG = 11;
+    public static final int DUPNAME = 12;
     public static void handleErr(String label, int error) throws InterpreterException
     {
         String[] err = {
@@ -29,8 +31,9 @@ public class ExceptionController {
                 "Undefined label",
                 "Variable cannot be defined",
                 "Operate type dose not exist",
-                "Operator is not defined"
-
+                "Operator is not defined",
+                "Expression Type Wrong",
+                "Duplicate program name"
         };
         throw new InterpreterException("<" + label + "> " + err[error]);
     }
@@ -66,6 +69,18 @@ public class ExceptionController {
                 if(single.length < 2)
                     handleErr(single[0],SYNTAX);
             }
+        }
+    }
+
+    public static void checkLegalRun(String type,String rawstring) throws InterpreterException {
+        String[] single = rawstring.split(" ");
+        if(type.equals("program") || type.equals("store") || type.equals("load")){
+            if(single.length != 2)
+                handleErr(single[0],SYNTAX);
+        }
+        else{
+            if(single.length != 1)
+                handleErr(single[0],SYNTAX);
         }
     }
 }
