@@ -18,6 +18,7 @@ public class ExceptionController {
 
     public static final int EXPTPWRONG = 11;
     public static final int DUPNAME = 12;
+    public static final int DUPVARNAME = 13;
     public static void handleErr(String label, int error) throws InterpreterException
     {
         String[] err = {
@@ -33,7 +34,8 @@ public class ExceptionController {
                 "Operate type dose not exist",
                 "Operator is not defined",
                 "Expression Type Wrong",
-                "Duplicate program name"
+                "Duplicate program name",
+                "Duplicate variable name"
         };
         throw new InterpreterException("<" + label + "> " + err[error]);
     }

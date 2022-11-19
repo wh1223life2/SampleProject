@@ -75,16 +75,72 @@ public class SampleModel {
     不允许同名！即使是不同类型
      */
 
-    public static void varDefine(Statement statement) throws InterpreterException { //REQ1 (not finished)
+    public static void varDefine(Statement statement) throws InterpreterException { //REQ1 名字限制未达成
 
         String expression = statement.getExpression();
         StringTokenizer st = new StringTokenizer(expression," ");
 
         String type = st.nextToken();
-        String name = st.nextToken();
-        String variable = st.nextToken();
-
-        if(variable!="true"||variable!="false"){
+        String varname = st.nextToken();
+        String value = st.nextToken();
+        //System.out.println(type);
+        if(intvar.containsKey(varname) || boolvar.containsKey(varname))
+            ExceptionController.handleErr(statement.getLabel(),ExceptionController.DUPVARNAME);
+        if(type.equals("int")){
+            if(checkRefType(value) == 0)
+                intvar.put(varname,Integer.parseInt(value));
+            else if(checkRefType(value) == 1)
+                ExceptionController.handleErr(statement.getLabel(),ExceptionController.EXPTPWRONG);
+            else if(checkRefType(value) == 2){
+                if(intvar.containsKey(value))
+                    intvar.put(varname,intvar.get(value));
+                else ExceptionController.handleErr(statement.getLabel(),ExceptionController.EXPTPWRONG);
+            }
+            else {
+                Statement expStatement = SampleController.findStatement(value);
+                String expType = expStatement.getOperationType();
+                if(expType.equals("binexpr")){
+                    if(checkRefType(binExpr(expStatement)) == 0)
+                        intvar.put(varname,Integer.parseInt(binExpr(expStatement)));
+                    else ExceptionController.handleErr(statement.getLabel(),ExceptionController.EXPTPWRONG);
+                }
+                else if(expType.equals("unexpr")){
+                    if(checkRefType(unExpr(expStatement)) == 0)
+                        intvar.put(varname,Integer.parseInt(unExpr(expStatement)));
+                    else ExceptionController.handleErr(statement.getLabel(),ExceptionController.EXPTPWRONG);
+                }
+                else ExceptionController.handleErr(statement.getLabel(), ExceptionController.EXPTPWRONG);
+            }
+        }
+        else if(type.equals("bool")){
+            if(checkRefType(value) == 1)
+                boolvar.put(varname,Boolean.valueOf(value));
+            else if(checkRefType(value) == 0)
+                ExceptionController.handleErr(statement.getLabel(),ExceptionController.EXPTPWRONG);
+            else if(checkRefType(value) == 2){
+                if(boolvar.containsKey(value))
+                    boolvar.put(varname,boolvar.get(value));
+                else ExceptionController.handleErr(statement.getLabel(),ExceptionController.EXPTPWRONG);
+            }
+            else {
+                Statement expStatement = SampleController.findStatement(value);
+                String expType = expStatement.getOperationType();
+                if(expType.equals("binexpr")){
+                    if(checkRefType(binExpr(expStatement)) == 1)
+                        boolvar.put(varname,Boolean.valueOf(binExpr(expStatement)));
+                    else ExceptionController.handleErr(statement.getLabel(),ExceptionController.EXPTPWRONG);
+                }
+                else if(expType.equals("unexpr")){
+                    if(checkRefType(unExpr(expStatement)) == 1)
+                        boolvar.put(varname,Boolean.valueOf(unExpr(expStatement)));
+                    else ExceptionController.handleErr(statement.getLabel(),ExceptionController.EXPTPWRONG);
+                }
+                else ExceptionController.handleErr(statement.getLabel(), ExceptionController.EXPTPWRONG);
+            }
+        }
+        else ExceptionController.handleErr(statement.getLabel(),ExceptionController.NOVARTP);
+        //intvar.put(varname,Integer.valueOf(value));
+        /*if(variable!="true"||variable!="false"){
             Integer var = Integer.parseInt(variable);
             if(type != "int" || type != "boolean") {
                 ExceptionController.handleErr(statement.getLabel(),ExceptionController.NOVARTP);
@@ -106,7 +162,7 @@ public class SampleModel {
             if(variable=="false"){
                 boolvar.put(name,false);
             }
-        }
+        }*/
     }
 
     public static int calculator(Statement s,String bop, int value_exp1, int value_exp2) throws InterpreterException{
@@ -515,9 +571,9 @@ public class SampleModel {
         else {
             Statement S1 = SampleController.findStatement(expression);
             String type = S1.getOperationType();
-            if(type == "binexpr") System.out.println("[" + binExpr(S1) + "] ");
-            else if(type == "unexpr") System.out.println("[" + unExpr(S1) + "]");
-            else ExceptionController.handleErr();
+            if(type.equals("binexpr")) System.out.println("[" + binExpr(S1) + "] ");
+            else if(type.equals("unexpr")) System.out.println("[" + unExpr(S1) + "]");
+            else ExceptionController.handleErr(expression,ExceptionController.EXPTPWRONG);
         }
     }
 
@@ -546,9 +602,9 @@ public class SampleModel {
         else if(checkRefType(condition) == 3){
             Statement expStatement = SampleController.findStatement(condition);
             String judgetype = expStatement.getOperationType();
-            if(judgetype == "binexpr")
+            if(judgetype.equals("binexpr"))
                 Result = (checkRefType(binExpr(expStatement))==1) ? Boolean.valueOf(binExpr(expStatement)): false;
-            else if(judgetype == "unexpr")
+            else if(judgetype.equals("unexpr"))
                 Result = (checkRefType(unExpr(expStatement)) == 1) ? Boolean.valueOf(unExpr(expStatement)) : false;
             else ExceptionController.handleErr(condition, ExceptionController.EXPTPWRONG);
         }
@@ -571,9 +627,9 @@ public class SampleModel {
         else if(checkRefType(condition) == 3){
             Statement expStatement = SampleController.findStatement(condition);
             String judgetype = expStatement.getOperationType();
-            if(judgetype == "binexpr")
+            if(judgetype.equals("binexpr"))
                 Result = (checkRefType(binExpr(expStatement))==1) ? Boolean.valueOf(binExpr(expStatement)): false;
-            else if(judgetype == "unexpr")
+            else if(judgetype.equals("unexpr"))
                 Result = (checkRefType(unExpr(expStatement)) == 1) ? Boolean.valueOf(unExpr(expStatement)) : false;
             else ExceptionController.handleErr(condition, ExceptionController.EXPTPWRONG);
         }
@@ -586,9 +642,9 @@ public class SampleModel {
             else if(checkRefType(condition) == 3){
                 Statement expStatement = SampleController.findStatement(condition);
                 String judgetype = expStatement.getOperationType();
-                if(judgetype == "binexpr")
+                if(judgetype.equals("binexpr"))
                     Result = (checkRefType(binExpr(expStatement))==1) ? Boolean.valueOf(binExpr(expStatement)): false;
-                else if(judgetype == "unexpr")
+                else if(judgetype.equals("unexpr"))
                     Result = (checkRefType(unExpr(expStatement)) == 1) ? Boolean.valueOf(unExpr(expStatement)) : false;
                 else ExceptionController.handleErr(condition, ExceptionController.EXPTPWRONG);
             }
