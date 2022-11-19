@@ -3,6 +3,9 @@ package hk.edu.polyu.comp.comp2021.simple.control;
 import hk.edu.polyu.comp.comp2021.simple.model.SampleModel;
 import hk.edu.polyu.comp.comp2021.simple.model.Statement;
 
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.HashSet;
 import java.util.StringTokenizer;
 
@@ -21,6 +24,10 @@ public class RunController {
     }
     public static void execute(String programname) throws InterpreterException {//REQ11
 
+        SampleModel.currentblock.clear();
+        SampleModel.intvar.clear();
+        SampleModel.boolvar.clear();
+
         if(!SampleController.Program.containsKey(programname))
             ExceptionController.handleErr(programname,ExceptionController.NOPRONAME);
         else {
@@ -31,6 +38,11 @@ public class RunController {
     }
 
     public static void list(String programname) throws InterpreterException {//REQ12
+
+        SampleModel.currentblock.clear();
+        SampleModel.intvar.clear();
+        SampleModel.boolvar.clear();
+
         if(!SampleController.Program.containsKey(programname))
             ExceptionController.handleErr(programname,ExceptionController.NOPRONAME);
         else {
@@ -45,8 +57,50 @@ public class RunController {
                     SampleModel.currentblock.add(blockstatement);
                 }
             }
-            for(Statement str: SampleModel.currentblock)
-                System.out.println(str.getOperationType()+" "+str.getLabel()+" "+str.getExpression());
+            for(Statement tempstr: SampleModel.currentblock)
+                System.out.println(tempstr.getOperationType()+" "+tempstr.getLabel()+" "+tempstr.getExpression());
         }
     }
+
+
+    public static void store(String rawstring) {//REQ13
+
+        StringTokenizer st = new StringTokenizer(rawstring," ");
+
+        String programname = st.nextToken();
+        String filepath = st.nextToken();
+
+        try {
+            File f=new File(filepath);
+            FileWriter fw;
+            fw=new FileWriter(f);
+            if(SampleController.Program.containsKey(programname))
+                fw.write(SampleController.Program.get(programname));
+            else ExceptionController.handleErr(programname,ExceptionController.NOPRONAME);
+            fw.close();
+            } catch (IOException e) { e.printStackTrace(); } catch (InterpreterException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static void load (String rawstring) throws InterpreterException {
+        StringTokenizer st = new StringTokenizer(rawstring," ");
+
+        String filepath = st.nextToken();
+        String programname = st.nextToken();
+        if(SampleController.Program.containsKey(programname))
+            ExceptionController.handleErr(programname,ExceptionController.DUPNAME);
+        else {
+            try {
+                String newlabel = new String(Files.readAllBytes(Paths.get(filepath)));
+                SampleController.findStatementTotal(newlabel);
+                SampleController.Program.put(programname,newlabel);
+                //System.out.println(SampleController.Program.get(programname));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+
 }

@@ -35,20 +35,18 @@ public class SampleController {
                     break;
                 case"execute":
                   //  System.out.println(temp2+ " "+Program.get(temp2));
-                    SampleModel.currentblock.clear();
-                    SampleModel.intvar.clear();
-                    SampleModel.boolvar.clear();
                     RunController.execute(temp2);
                     break;
                 case"list":
                     //  System.out.println(temp2+ " "+Program.get(temp2));
-                    SampleModel.currentblock.clear();
-                    SampleModel.intvar.clear();
-                    SampleModel.boolvar.clear();
                     RunController.list(temp2);
                     break;
-
-                //剩下13-14；
+                case "store":
+                    RunController.store(temp2);
+                    break;
+                case "load":
+                    RunController.load(temp2);
+                    break;
             }
         }
         else {
