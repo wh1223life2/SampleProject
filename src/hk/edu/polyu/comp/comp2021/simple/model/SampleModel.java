@@ -7,21 +7,32 @@ import hk.edu.polyu.comp.comp2021.simple.control.SampleController;
 
 import java.util.*;
 
+/**
+ * The type Sample model.
+ */
 public class SampleModel {
 
+    /**
+     * The Boolvar.
+     */
     public static HashMap<String, Boolean> boolvar = new HashMap<>();
+    /**
+     * The Intvar.
+     */
     public static HashMap<String, Integer> intvar = new HashMap<>();
 
+    /**
+     * The Currentblock.
+     */
     public static HashSet<Statement> currentblock = new HashSet<>();
 
-    /*
-    表达式与expression命名规范 数字不开头 最多八位    需判断  未完成**
-     */
 
-    /*
-    检查expRef类型
-    0，1，2，3对应int bool Variable expression 其余抛出
-    未判断int上限问题（round to -99999 ~ 99999）
+    /**
+     * Check ref type int.
+     *
+     * @param expRef the exp ref
+     * @return the int
+     * @throws InterpreterException the interpreter exception
      */
     public static int checkRefType(String expRef) throws InterpreterException {
         try {
@@ -38,6 +49,13 @@ public class SampleModel {
         }
         return -1;
     }
+
+    /**
+     * Execute statement.
+     *
+     * @param newlabel the newlabel
+     * @throws InterpreterException the interpreter exception
+     */
     public static void ExecuteStatement(String newlabel) throws InterpreterException {
         if(!SampleController.checkUnique(newlabel)){
             Statement S1 = SampleController.findStatement(newlabel);
@@ -79,6 +97,12 @@ public class SampleModel {
     不允许同名！即使是不同类型
      */
 
+    /**
+     * Var define.
+     *
+     * @param statement the statement
+     * @throws InterpreterException the interpreter exception
+     */
     public static void varDefine(Statement statement) throws InterpreterException { //REQ1 名字限制未达成
 
         String expression = statement.getExpression();
@@ -145,6 +169,16 @@ public class SampleModel {
         else ExceptionController.handleErr(statement.getLabel(),ExceptionController.NOVARTP);
     }
 
+    /**
+     * Calculator int.
+     *
+     * @param s          the s
+     * @param bop        the bop
+     * @param value_exp1 the value exp 1
+     * @param value_exp2 the value exp 2
+     * @return the int
+     * @throws InterpreterException the interpreter exception
+     */
     public static int calculator(Statement s,String bop, int value_exp1, int value_exp2) throws InterpreterException{
         if(bop.equals("%")){return value_exp1 % value_exp2;}
         else if(bop.equals("+")){return value_exp1 + value_exp2;}
@@ -156,6 +190,14 @@ public class SampleModel {
         return 0;
     }
 
+    /**
+     * Comparison boolean.
+     *
+     * @param bop        the bop
+     * @param value_exp1 the value exp 1
+     * @param value_exp2 the value exp 2
+     * @return the boolean
+     */
     public static boolean comparison(String bop, int value_exp1, int value_exp2){
         if(bop.equals(">")){return value_exp1 > value_exp2;}
         else if(bop.equals(">=")){return value_exp1 >= value_exp2;}
@@ -166,6 +208,13 @@ public class SampleModel {
         return false;
     }
 
+    /**
+     * Bin expr string.
+     *
+     * @param s the s
+     * @return the string
+     * @throws InterpreterException the interpreter exception
+     */
     public static String binExpr(Statement s) throws InterpreterException{ //REQ2
 
         String expression = s.getExpression();
@@ -469,6 +518,13 @@ public class SampleModel {
 
     }
 
+    /**
+     * Un expr string.
+     *
+     * @param s the s
+     * @return the string
+     * @throws InterpreterException the interpreter exception
+     */
     public static String unExpr(Statement s) throws InterpreterException { //REQ3
         String expression = s.getExpression();
         StringTokenizer st = new StringTokenizer(expression," ");
@@ -537,6 +593,12 @@ public class SampleModel {
         return "";
     }
 
+    /**
+     * Assign.
+     *
+     * @param s the s
+     * @throws InterpreterException the interpreter exception
+     */
     public static void assign(Statement s) throws InterpreterException { //REQ4
         String expression = s.getExpression();
         StringTokenizer st = new StringTokenizer(expression, " ");
@@ -642,6 +704,13 @@ public class SampleModel {
 
         }
     }
+
+    /**
+     * Print.
+     *
+     * @param s the s
+     * @throws InterpreterException the interpreter exception
+     */
     public static void print(Statement s) throws InterpreterException {//REQ5
         String expression = s.getExpression();
         if(checkRefType(expression) == 0 || checkRefType(expression) == 1)
@@ -657,10 +726,21 @@ public class SampleModel {
         }
     }
 
+    /**
+     * Skip.
+     *
+     * @param s the s
+     */
     public static void skip(Statement s){//REQ6
         return;
     }
 
+    /**
+     * Block.
+     *
+     * @param s the s
+     * @throws InterpreterException the interpreter exception
+     */
     public static void block(Statement s) throws InterpreterException {//REQ7
         String expression = s.getExpression();
         String[] labs = expression.split(" ");
@@ -672,6 +752,12 @@ public class SampleModel {
         }
     }
 
+    /**
+     * If operation.
+     *
+     * @param s the s
+     * @throws InterpreterException the interpreter exception
+     */
     public static void ifOperation(Statement s) throws InterpreterException {//REQ8
         String expression = s.getExpression();
         StringTokenizer str = new StringTokenizer(expression," ");
@@ -698,6 +784,12 @@ public class SampleModel {
         else ExecuteStatement(falseExecute);
     }
 
+    /**
+     * While operation.
+     *
+     * @param s the s
+     * @throws InterpreterException the interpreter exception
+     */
     public static void whileOperation(Statement s) throws InterpreterException {//REQ9
         String expression = s.getExpression();
         StringTokenizer str = new StringTokenizer(expression," ");

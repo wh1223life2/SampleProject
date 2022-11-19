@@ -5,17 +5,35 @@ import hk.edu.polyu.comp.comp2021.simple.model.Statement;
 
 import java.util.*;
 
+/**
+ * The type Sample controller.
+ */
 public class SampleController {
 
-    //public static HashMap<String,String> Labels = new HashMap<>();
-    //public static HashMap<String,String> ExecuteType = new HashMap<>();
-    public static HashSet<Statement> total = new HashSet<>();
-    public static HashMap<String,String> Program = new HashMap<>();
-    public static List<String> DeExecuteType = Arrays.asList("vardef", "binexpr", "unexpr", "assign", "print", "skip", "block", "if", "while");
-    public static List<String> RunExecuteType = Arrays.asList("program","execute", "list", "store", "load");
+    /**
+     * The Total.
+     */
+    static HashSet<Statement> total = new HashSet<>();
+    /**
+     * The Program.
+     */
+    static HashMap<String,String> Program = new HashMap<>();
+    /**
+     * The De execute type.
+     */
+    static List<String> DeExecuteType = Arrays.asList("vardef", "binexpr", "unexpr", "assign", "print", "skip", "block", "if", "while");
+    /**
+     * The Run execute type.
+     */
+    static List<String> RunExecuteType = Arrays.asList("program","execute", "list", "store", "load");
 
-    public static List<String> DebugExecute = Arrays.asList("debug","togglebreakpoint","inspect","instrument");
 
+    /**
+     * Initial.
+     *
+     * @param str the str
+     * @throws InterpreterException the interpreter exception
+     */
     public static void Initial(String str) throws InterpreterException {
         StringTokenizer currentSub = new StringTokenizer(str, " ");
         String temp1 = currentSub.nextToken();
@@ -51,33 +69,46 @@ public class SampleController {
                     break;
             }
         }
-        else if(DebugExecute.contains(temp1)){
-            temp2 = str.substring(temp1.length()+1);
-            switch(temp1){
-                case"instrument":
-                    DebugController.instrument(temp2);
-                    break;
-            }
-        }
         else {
             temp2 = currentSub.nextToken();
             ExceptionController.handleErr(temp2, ExceptionController.NOOPETP);
         }
     }
 
-    //keep label unique
+    /**
+     * Check unique total boolean.
+     *
+     * @param newlabel the newlabel
+     * @return the boolean
+     */
+//keep label unique
     public static boolean checkUniqueTotal(String newlabel) {
         for (Statement p : total)
             if (p.getLabel().equals(newlabel))
                 return false;
         return true;
     }
+
+    /**
+     * Check unique boolean.
+     *
+     * @param newlabel the newlabel
+     * @return the boolean
+     */
     public static boolean checkUnique(String newlabel) {
         for (Statement p : SampleModel.currentblock)
             if (p.getLabel().equals(newlabel))
                 return false;
         return true;
     }
+
+    /**
+     * Find statement statement.
+     *
+     * @param newlabel the newlabel
+     * @return the statement
+     * @throws InterpreterException the interpreter exception
+     */
     public static Statement findStatement(String newlabel) throws InterpreterException {
         for (Statement p : SampleModel.currentblock)
             if (p.getLabel().equals(newlabel))
@@ -86,6 +117,13 @@ public class SampleController {
         return new Statement("","","");
     }
 
+    /**
+     * Find statement total statement.
+     *
+     * @param newlabel the newlabel
+     * @return the statement
+     * @throws InterpreterException the interpreter exception
+     */
     public static Statement findStatementTotal(String newlabel) throws InterpreterException {
         for (Statement p : total)
             if (p.getLabel().equals(newlabel))

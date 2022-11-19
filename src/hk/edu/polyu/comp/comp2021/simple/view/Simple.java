@@ -5,9 +5,18 @@ import hk.edu.polyu.comp.comp2021.simple.control.SampleController;
 
 import java.util.Scanner;
 
+/**
+ * The type Simple.
+ */
 public class Simple{
 
-    boolean EOF = false;
+    private boolean EOF = false;
+
+    /**
+     * Instantiates a new Simple.
+     *
+     * @throws InterpreterException the interpreter exception
+     */
     public Simple() throws InterpreterException {
         do{
             System.out.print(">");

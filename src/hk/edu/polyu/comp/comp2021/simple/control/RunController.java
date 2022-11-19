@@ -9,7 +9,16 @@ import java.nio.file.Paths;
 import java.util.HashSet;
 import java.util.StringTokenizer;
 
+/**
+ * The type Run controller.
+ */
 public class RunController {
+    /**
+     * Program.
+     *
+     * @param rawstring the rawstring
+     * @throws InterpreterException the interpreter exception
+     */
     public static void program(String rawstring) throws InterpreterException {//REQ10
         StringTokenizer st = new StringTokenizer(rawstring," ");
 
@@ -22,6 +31,13 @@ public class RunController {
             SampleController.Program.put(programname,label);
         }
     }
+
+    /**
+     * Execute.
+     *
+     * @param programname the programname
+     * @throws InterpreterException the interpreter exception
+     */
     public static void execute(String programname) throws InterpreterException {//REQ11
 
         SampleModel.currentblock.clear();
@@ -37,6 +53,12 @@ public class RunController {
         }
     }
 
+    /**
+     * List.
+     *
+     * @param programname the programname
+     * @throws InterpreterException the interpreter exception
+     */
     public static void list(String programname) throws InterpreterException {//REQ12
 
         SampleModel.currentblock.clear();
@@ -63,6 +85,11 @@ public class RunController {
     }
 
 
+    /**
+     * Store.
+     *
+     * @param rawstring the rawstring
+     */
     public static void store(String rawstring) {//REQ13
 
         StringTokenizer st = new StringTokenizer(rawstring," ");
@@ -83,6 +110,12 @@ public class RunController {
         }
     }
 
+    /**
+     * Load.
+     *
+     * @param rawstring the rawstring
+     * @throws InterpreterException the interpreter exception
+     */
     public static void load (String rawstring) throws InterpreterException {
         StringTokenizer st = new StringTokenizer(rawstring," ");
 

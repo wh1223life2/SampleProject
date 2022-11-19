@@ -2,24 +2,81 @@ package hk.edu.polyu.comp.comp2021.simple.control;
 
 import static hk.edu.polyu.comp.comp2021.simple.control.SampleController.total;
 
+
+/**
+ * The type Exception controller.
+ */
 public class ExceptionController {
+    /**
+     * The constant SYNTAX.
+     */
     public static final int SYNTAX = 0;
+    /**
+     * The constant NOVARTP.
+     */
     public static final int NOVARTP = 1;
+    /**
+     * The constant NOEXPTP.
+     */
     public static final int NOEXPTP = 2;
+    /**
+     * The constant DIVBYZERO.
+     */
     public static final int DIVBYZERO = 3;
+    /**
+     * The constant EQUALEXPECTED.
+     */
     public static final int EQUALEXPECTED = 4;
+    /**
+     * The constant NOTVAR.
+     */
     public static final int NOTVAR = 5;
+    /**
+     * The constant DUPLABEL.
+     */
     public static final int DUPLABEL = 6;
+    /**
+     * The constant UNDEFLABEL.
+     */
     public static final int UNDEFLABEL = 7;
+    /**
+     * The constant UNDEFINEDVAR.
+     */
     public static final int UNDEFINEDVAR = 8;
+    /**
+     * The constant NOOPETP.
+     */
     public static final int NOOPETP = 9;
 
+    /**
+     * The constant NOTBINOP.
+     */
     public static final int NOTBINOP = 10;
 
+    /**
+     * The constant EXPTPWRONG.
+     */
     public static final int EXPTPWRONG = 11;
+    /**
+     * The constant DUPNAME.
+     */
     public static final int DUPNAME = 12;
+    /**
+     * The constant DUPVARNAME.
+     */
     public static final int DUPVARNAME = 13;
+    /**
+     * The constant NOPRONAME.
+     */
     public static final int NOPRONAME = 14;
+
+    /**
+     * Handle err.
+     *
+     * @param label the label
+     * @param error the error
+     * @throws InterpreterException the interpreter exception
+     */
     public static void handleErr(String label, int error) throws InterpreterException
     {
         String[] err = {
@@ -42,7 +99,14 @@ public class ExceptionController {
         throw new InterpreterException("<" + label + "> " + err[error]);
     }
 
-    /*
+    /**
+     * Check legal.
+     *
+     * @param type      the type
+     * @param rawstring the rawstring
+     * @throws InterpreterException the interpreter exception
+     */
+/*
     只检查操作类型 不检查run
     1.类型是否符合？
     2.label是否重复（define）/label是否不存在？（run）[raw string内的]
@@ -76,6 +140,13 @@ public class ExceptionController {
         }
     }
 
+    /**
+     * Check legal run.
+     *
+     * @param type      the type
+     * @param rawstring the rawstring
+     * @throws InterpreterException the interpreter exception
+     */
     public static void checkLegalRun(String type,String rawstring) throws InterpreterException {
         String[] single = rawstring.split(" ");
         if(type.equals("program") || type.equals("store") || type.equals("load")){
