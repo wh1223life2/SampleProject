@@ -1,10 +1,6 @@
 package hk.edu.polyu.comp.comp2021.simple.model;
 
 
-import hk.edu.polyu.comp.comp2021.simple.control.ExceptionController;
-import hk.edu.polyu.comp.comp2021.simple.control.InterpreterException;
-import hk.edu.polyu.comp.comp2021.simple.control.SampleController;
-
 import java.util.*;
 
 /**
@@ -15,16 +11,16 @@ public class SampleModel {
     /**
      * The Boolvar.
      */
-    public static HashMap<String, Boolean> boolvar = new HashMap<>();
+    protected static HashMap<String, Boolean> boolvar = new HashMap<>();
     /**
      * The Intvar.
      */
-    public static HashMap<String, Integer> intvar = new HashMap<>();
+    protected static HashMap<String, Integer> intvar = new HashMap<>();
 
     /**
      * The Currentblock.
      */
-    public static HashSet<Statement> currentblock = new HashSet<>();
+    protected static HashSet<Statement> currentblock = new HashSet<>();
 
 
     /**
@@ -567,7 +563,7 @@ public class SampleModel {
                 }
                 // 4 : b is expression
                 if(checkRefType(b) == 3){
-                    if(SampleController.findStatement(b).equals("binexpr") ){
+                    if(SampleController.findStatement(b).getOperationType().equals("binexpr") ){
                         if(checkRefType(binExpr(SampleController.findStatement(b))) == 0){
                             String value = binExpr(SampleController.findStatement(b));
                             Integer b_value = Integer.parseInt(value);
@@ -594,7 +590,7 @@ public class SampleModel {
                 }
                 // 4 : b is expression
                 if(checkRefType(b) == 3){
-                    if(SampleController.findStatement(b).equals("binexpr") ){
+                    if(SampleController.findStatement(b).getOperationType().equals("binexpr") ){
                         if(checkRefType(binExpr(SampleController.findStatement(b))) == 0){
                             String value = binExpr(SampleController.findStatement(b));
                             Integer b_value = Integer.parseInt(value);

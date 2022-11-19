@@ -1,4 +1,4 @@
-package hk.edu.polyu.comp.comp2021.simple.control;
+package hk.edu.polyu.comp.comp2021.simple.model;
 
 /**
  * The type Interpreter exception.

@@ -1,7 +1,4 @@
-package hk.edu.polyu.comp.comp2021.simple.control;
-
-import hk.edu.polyu.comp.comp2021.simple.model.SampleModel;
-import hk.edu.polyu.comp.comp2021.simple.model.Statement;
+package hk.edu.polyu.comp.comp2021.simple.model;
 
 import java.util.*;
 
@@ -13,19 +10,19 @@ public class SampleController {
     /**
      * The Total.
      */
-    static HashSet<Statement> total = new HashSet<>();
+    protected static HashSet<Statement> total = new HashSet<>();
     /**
      * The Program.
      */
-    static HashMap<String,String> Program = new HashMap<>();
+    protected static HashMap<String,String> Program = new HashMap<>();
     /**
      * The De execute type.
      */
-    static List<String> DeExecuteType = Arrays.asList("vardef", "binexpr", "unexpr", "assign", "print", "skip", "block", "if", "while");
+    protected static List<String> DeExecuteType = Arrays.asList("vardef", "binexpr", "unexpr", "assign", "print", "skip", "block", "if", "while");
     /**
      * The Run execute type.
      */
-    static List<String> RunExecuteType = Arrays.asList("program","execute", "list", "store", "load");
+    protected static List<String> RunExecuteType = Arrays.asList("program","execute", "list", "store", "load");
 
 
     /**
@@ -37,7 +34,7 @@ public class SampleController {
     public static void Initial(String str) throws InterpreterException {
         StringTokenizer currentSub = new StringTokenizer(str, " ");
         String temp1 = currentSub.nextToken();
-        String temp2 = "";
+        String temp2 ;
         if (!currentSub.hasMoreTokens())
             ExceptionController.handleErr("unknown Statement", ExceptionController.SYNTAX);
         else if (DeExecuteType.contains(temp1)) {
