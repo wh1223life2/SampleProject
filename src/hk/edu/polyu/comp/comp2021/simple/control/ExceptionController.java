@@ -19,6 +19,7 @@ public class ExceptionController {
     public static final int EXPTPWRONG = 11;
     public static final int DUPNAME = 12;
     public static final int DUPVARNAME = 13;
+    public static final int NOPRONAME = 14;
     public static void handleErr(String label, int error) throws InterpreterException
     {
         String[] err = {
@@ -35,7 +36,8 @@ public class ExceptionController {
                 "Operator is not defined",
                 "Expression Type Wrong",
                 "Duplicate program name",
-                "Duplicate variable name"
+                "Duplicate variable name",
+                "program name does not exist",
         };
         throw new InterpreterException("<" + label + "> " + err[error]);
     }
@@ -48,7 +50,7 @@ public class ExceptionController {
      */
     public static void checkLegal(String type,String rawstring) throws InterpreterException {
         String[] single = rawstring.split(" ");
-        if(!SampleController.checkUnique(single[0]))
+        if(!SampleController.checkUniqueTotal(single[0]))
             handleErr(single[0],DUPLABEL);
         else{
             if(type.equals("vardef") || type.equals("binexpr") || type.equals("if")){

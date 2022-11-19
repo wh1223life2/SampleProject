@@ -4,14 +4,15 @@ package hk.edu.polyu.comp.comp2021.simple.model;
 import hk.edu.polyu.comp.comp2021.simple.control.ExceptionController;
 import hk.edu.polyu.comp.comp2021.simple.control.InterpreterException;
 import hk.edu.polyu.comp.comp2021.simple.control.SampleController;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.StringTokenizer;
+
+import java.util.*;
 
 public class SampleModel {
 
     public static HashMap<String, Boolean> boolvar = new HashMap<>();
-    public static HashMap<String, Integer> intvar = new HashMap<String, Integer>();
+    public static HashMap<String, Integer> intvar = new HashMap<>();
+
+    public static HashSet<Statement> currentblock = new HashSet<>();
 
     /*
     表达式与expression命名规范 数字不开头 最多八位    需判断  未完成**
@@ -62,6 +63,9 @@ public class SampleModel {
                     break;
                 case "while":
                     whileOperation(S1);
+                    break;
+                case "binexpr":
+                case "unexpr":
                     break;
                 default:
                     ExceptionController.handleErr(newlabel,ExceptionController.UNDEFLABEL);
@@ -139,30 +143,6 @@ public class SampleModel {
             }
         }
         else ExceptionController.handleErr(statement.getLabel(),ExceptionController.NOVARTP);
-        //intvar.put(varname,Integer.valueOf(value));
-        /*if(variable!="true"||variable!="false"){
-            Integer var = Integer.parseInt(variable);
-            if(type != "int" || type != "boolean") {
-                ExceptionController.handleErr(statement.getLabel(),ExceptionController.NOVARTP);
-            }
-            if(var %1 != 0){
-                ExceptionController.handleErr(statement.getLabel(),ExceptionController.NOEXPTP);
-            }
-            if(type=="int" && var%1==0){
-                intvar.put(name,var);
-            }
-        }
-        else if(variable=="true"||variable=="false"){
-            if(type != "int" || type != "boolean") {
-                ExceptionController.handleErr(statement.getLabel(),ExceptionController.NOVARTP);
-            }
-            if(variable=="true"){
-                boolvar.put(name,true);
-            }
-            if(variable=="false"){
-                boolvar.put(name,false);
-            }
-        }*/
     }
 
     public static int calculator(Statement s,String bop, int value_exp1, int value_exp2) throws InterpreterException{
@@ -693,7 +673,11 @@ public class SampleModel {
         String expression = s.getExpression();
         String[] labs = expression.split(" ");
         for(int i = 0;i < labs.length; i++)
+        {
+            Statement currentS = SampleController.findStatementTotal(labs[i]);
+            currentblock.add(currentS);
             ExecuteStatement(labs[i]);
+        }
     }
 
     public static void ifOperation(Statement s) throws InterpreterException {//REQ8

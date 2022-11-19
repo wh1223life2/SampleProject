@@ -35,7 +35,10 @@ public class SampleController {
                     break;
                 case"execute":
                   //  System.out.println(temp2+ " "+Program.get(temp2));
-                    SampleModel.ExecuteStatement(Program.get(temp2));//REQ11
+                    SampleModel.currentblock.clear();
+                    SampleModel.intvar.clear();
+                    SampleModel.boolvar.clear();
+                    RunController.execute(temp2);
                     break;
                     //剩下12-14；
             }
@@ -47,22 +50,31 @@ public class SampleController {
     }
 
     //keep label unique
-    public static boolean checkUnique(String newlabel) {
+    public static boolean checkUniqueTotal(String newlabel) {
         for (Statement p : total)
             if (p.getLabel().equals(newlabel))
                 return false;
         return true;
     }
-
+    public static boolean checkUnique(String newlabel) {
+        for (Statement p : SampleModel.currentblock)
+            if (p.getLabel().equals(newlabel))
+                return false;
+        return true;
+    }
     public static Statement findStatement(String newlabel) throws InterpreterException {
-        for (Statement p : total)
+        for (Statement p : SampleModel.currentblock)
             if (p.getLabel().equals(newlabel))
                 return p;
         ExceptionController.handleErr(newlabel,ExceptionController.UNDEFLABEL);
         return new Statement("","","");
     }
-    public static void Testing(){
+
+    public static Statement findStatementTotal(String newlabel) throws InterpreterException {
         for (Statement p : total)
-            System.out.println(p.getOperationType() + " " + p.getLabel() + " " +p.getExpression());
+            if (p.getLabel().equals(newlabel))
+                return p;
+        ExceptionController.handleErr(newlabel,ExceptionController.UNDEFLABEL);
+        return new Statement("","","");
     }
 }
