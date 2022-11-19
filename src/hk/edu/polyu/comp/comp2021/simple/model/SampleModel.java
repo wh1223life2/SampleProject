@@ -147,12 +147,12 @@ public class SampleModel {
 
     public static int calculator(Statement s,String bop, int value_exp1, int value_exp2) throws InterpreterException{
         if(bop.equals("%")){return value_exp1 % value_exp2;}
-        else if(bop.equals("+")){
-            if(value_exp2 == 0)ExceptionController.handleErr(s.getLabel(),ExceptionController.EQUALEXPECTED);
-            return value_exp1 + value_exp2;}
+        else if(bop.equals("+")){return value_exp1 + value_exp2;}
         else if(bop.equals("-")){return value_exp1 - value_exp2;}
         else if(bop.equals("*")){return value_exp1 * value_exp2;}
-        else if(bop.equals("/")){return value_exp1 / value_exp2;}
+        else if(bop.equals("/")){
+            if(value_exp2 == 0)ExceptionController.handleErr(s.getLabel(),ExceptionController.DIVBYZERO);
+            return value_exp1 / value_exp2;}
         return 0;
     }
 
