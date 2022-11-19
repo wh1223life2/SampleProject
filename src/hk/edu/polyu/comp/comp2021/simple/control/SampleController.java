@@ -40,7 +40,15 @@ public class SampleController {
                     SampleModel.boolvar.clear();
                     RunController.execute(temp2);
                     break;
-                    //剩下12-14；
+                case"list":
+                    //  System.out.println(temp2+ " "+Program.get(temp2));
+                    SampleModel.currentblock.clear();
+                    SampleModel.intvar.clear();
+                    SampleModel.boolvar.clear();
+                    RunController.list(temp2);
+                    break;
+
+                //剩下13-14；
             }
         }
         else {

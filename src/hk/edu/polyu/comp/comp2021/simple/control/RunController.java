@@ -29,4 +29,24 @@ public class RunController {
             SampleModel.ExecuteStatement(SampleController.Program.get(programname));
         }
     }
+
+    public static void list(String programname) throws InterpreterException {//REQ12
+        if(!SampleController.Program.containsKey(programname))
+            ExceptionController.handleErr(programname,ExceptionController.NOPRONAME);
+        else {
+            Statement currentS = SampleController.findStatementTotal(SampleController.Program.get(programname));
+            SampleModel.currentblock.add(currentS);
+            if(currentS.getOperationType().equals("block")){
+                String expression = currentS.getExpression();
+                String[] labs = expression.split(" ");
+                for(int i = 0;i < labs.length; i++)
+                {
+                    Statement blockstatement = SampleController.findStatementTotal(labs[i]);
+                    SampleModel.currentblock.add(blockstatement);
+                }
+            }
+            for(Statement str: SampleModel.currentblock)
+                System.out.println(str.getOperationType()+" "+str.getLabel()+" "+str.getExpression());
+        }
+    }
 }
