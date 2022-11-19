@@ -534,120 +534,114 @@ public class SampleModel {
             }
 
         }
-
-        // condition 2 : post_increment and post_decrease
-        if(b.equals("~") || b.equals("#")){
-            if(a.equals("#")){
-                // 1 : b is int
-                if(checkRefType(a) == 0){
-                    Integer a_value = Integer.parseInt(a);
-                    return String.valueOf(a_value);
-                }
-                // 2 : b is bool
-                if(checkRefType(a) == 1){
-                    ExceptionController.handleErr(s.getLabel(),ExceptionController.SYNTAX);
-                }
-                // 3 : b is variable
-                if(checkRefType(a) == 2){
-                    if(intvar.get(a) == null){ExceptionController.handleErr(s.getLabel(),ExceptionController.UNDEFINEDVAR);}
-                    int a_value = intvar.get(a);
-                    intvar.put(a,a_value+1);
-                    return String.valueOf(a_value);
-                }
-                // 4 : b is expression
-                if(checkRefType(a) == 3){
-                    if(SampleController.findStatement(a).equals("binexpr") ){
-                        if(checkRefType(binExpr(SampleController.findStatement(a))) == 0){
-                            String value = binExpr(SampleController.findStatement(a));
-                            Integer a_value = Integer.parseInt(value);
-                            return String.valueOf(a_value);
-                        }
-                    }
-                }
-            }
-            if(a.equals("~")){
-                // 1 : b is int
-                if(checkRefType(a) == 0){
-                    Integer a_value = Integer.parseInt(a);
-                    return String.valueOf(a_value);
-                }
-                // 2 : b is bool
-                if(checkRefType(a) == 1){
-                    ExceptionController.handleErr(s.getLabel(),ExceptionController.SYNTAX);
-                }
-                // 3 : b is variable
-                if(checkRefType(a) == 2){
-                    if(intvar.get(a) == null){ExceptionController.handleErr(s.getLabel(),ExceptionController.UNDEFINEDVAR);}
-                    int a_value = intvar.get(a);
-                    intvar.put(a,a_value-1);
-                    return String.valueOf(a_value);
-                }
-                // 4 : b is expression
-                if(checkRefType(a) == 3){
-                    if(SampleController.findStatement(a).equals("binexpr") ){
-                        if(checkRefType(binExpr(SampleController.findStatement(a))) == 0){
-                            String value = binExpr(SampleController.findStatement(a));
-                            Integer a_value = Integer.parseInt(value);
-                            return String.valueOf(a_value);
-                        }
-                    }
-                }
-            }
-        }
         return "";
     }
 
-    public static void assign(Statement s) throws InterpreterException{ //REQ4
+    public static void assign(Statement s) throws InterpreterException { //REQ4
         String expression = s.getExpression();
-        StringTokenizer st = new StringTokenizer(expression," ");
+        StringTokenizer st = new StringTokenizer(expression, " ");
 
         String LHS = st.nextToken();
         String RHS = st.nextToken();
 
 
         //condition 1 : LHS is int (int = int / int = variable / int = bool / int = expression) which are all wrong
-        if(checkRefType(LHS) == 0){ExceptionController.handleErr(s.getLabel(),ExceptionController.NOTVAR);}
-
-        //condition 2 : LHS is bool ( bool = int / bool = variable / bool = bool / bool = expression) which are all wrong
-        if(checkRefType(LHS) == 1){ExceptionController.handleErr(s.getLabel(),ExceptionController.NOTVAR);}
-
-        //condition 3 : LHS is variable (variable = int / variable = expression / variable = bool / variable = variable)
-        if(checkRefType(LHS) == 2){
-            // 1 : variable = int
-            if(checkRefType(RHS) == 0){
-                Integer RHS_value = Integer.parseInt(RHS);
-                intvar.put(LHS,RHS_value);
-            }
-
-            // 2 : variable = bool
-            if(checkRefType(RHS) == 1 ){
-                ExceptionController.handleErr(s.getLabel(),ExceptionController.SYNTAX);
-            }
-
-            // 3 : variable = variable
-            if(checkRefType(RHS) == 2){
-                if(intvar.get(RHS) == null){ExceptionController.handleErr(s.getLabel(),ExceptionController.UNDEFINEDVAR);}
-                int RHS_value = intvar.get(RHS);
-                intvar.put(LHS,RHS_value);
-            }
-
-            // 4 : variable = expression
-            if(checkRefType(RHS) == 3){
-                if(SampleController.findStatement(RHS).getOperationType().equals("binexpr")){
-                    if(checkRefType(binExpr(SampleController.findStatement(RHS))) == 0){
-                        String value = binExpr(SampleController.findStatement(RHS));
-                        Integer RHS_value = Integer.parseInt(value);
-                        intvar.put(LHS,RHS_value);
-                    }
-                }
-            }
+        if (checkRefType(LHS) == 0) {
+            ExceptionController.handleErr(s.getLabel(), ExceptionController.NOTVAR);
         }
 
-        // condition 4 : LHS is expression ( expression = int / expression = expression / expression = bool / expression = variable )
-        if(checkRefType(LHS) == 3){ExceptionController.handleErr(s.getLabel(),ExceptionController.NOTVAR);}
+        //condition 2 : LHS is bool ( bool = int / bool = variable / bool = bool / bool = expression) which are all wrong
+        if (checkRefType(LHS) == 1) {
+            ExceptionController.handleErr(s.getLabel(), ExceptionController.NOTVAR);
+        }
 
+        //condition 3 : LHS is variable (variable = int / variable = expression / variable = bool / variable = variable)
+        if (checkRefType(LHS) == 2) {
+            // 1 : variable = int
+            if (intvar.containsKey(LHS)) {
+                if (checkRefType(RHS) == 0) {
+                    Integer RHS_value = Integer.parseInt(RHS);
+                    intvar.put(LHS, RHS_value);
+                }
+
+                // 2 : variable = bool
+                if (checkRefType(RHS) == 1) {
+                    ExceptionController.handleErr(s.getLabel(), ExceptionController.SYNTAX);
+                }
+
+                // 3 : variable = variable
+                if (checkRefType(RHS) == 2) {
+                    if (intvar.get(RHS) == null) {
+                        ExceptionController.handleErr(s.getLabel(), ExceptionController.UNDEFINEDVAR);
+                    }
+                    int RHS_value = intvar.get(RHS);
+                    intvar.put(LHS, RHS_value);
+                }
+
+                // 4 : variable = expression
+                if (checkRefType(RHS) == 3) {
+                    if (SampleController.findStatement(RHS).getOperationType().equals("binexpr")) {
+                        if (checkRefType(binExpr(SampleController.findStatement(RHS))) == 0) {
+                            String value = binExpr(SampleController.findStatement(RHS));
+                            Integer RHS_value = Integer.parseInt(value);
+                            intvar.put(LHS, RHS_value);
+                        } else
+                            ExceptionController.handleErr(SampleController.findStatement(RHS).getLabel(), ExceptionController.EXPTPWRONG);
+                    } else if (SampleController.findStatement(RHS).getOperationType().equals("unexpr")) {
+                        if (checkRefType(unExpr(SampleController.findStatement(RHS))) == 0) {
+                            String value = unExpr(SampleController.findStatement(RHS));
+                            Integer RHS_value = Integer.parseInt(value);
+                            intvar.put(LHS, RHS_value);
+                        } else
+                            ExceptionController.handleErr(SampleController.findStatement(RHS).getLabel(), ExceptionController.EXPTPWRONG);
+                    } else
+                        ExceptionController.handleErr(SampleController.findStatement(RHS).getLabel(), ExceptionController.EXPTPWRONG);
+                }
+            } else {
+                // 1 : variable = bool
+                if (checkRefType(RHS) == 1) {
+                    boolvar.put(LHS, Boolean.valueOf(RHS));
+                }
+
+                // 2 : variable = bool
+                if (checkRefType(RHS) == 0) {
+                    ExceptionController.handleErr(s.getLabel(), ExceptionController.SYNTAX);
+                }
+
+                // 3 : variable = variable
+                if (checkRefType(RHS) == 2) {
+                    if (boolvar.get(RHS) == null) {
+                        ExceptionController.handleErr(s.getLabel(), ExceptionController.UNDEFINEDVAR);
+                    }
+                    boolvar.put(LHS, Boolean.valueOf(RHS));
+                }
+
+                // 4 : variable = expression
+                if (checkRefType(RHS) == 3) {
+                    if (SampleController.findStatement(RHS).getOperationType().equals("binexpr")) {
+                        if (checkRefType(binExpr(SampleController.findStatement(RHS))) == 1) {
+                            String value = binExpr(SampleController.findStatement(RHS));
+                            boolvar.put(LHS, Boolean.valueOf(RHS));
+                        } else
+                            ExceptionController.handleErr(SampleController.findStatement(RHS).getLabel(), ExceptionController.EXPTPWRONG);
+                    } else if (SampleController.findStatement(RHS).getOperationType().equals("unexpr")) {
+                        if (checkRefType(unExpr(SampleController.findStatement(RHS))) == 1) {
+                            String value = unExpr(SampleController.findStatement(RHS));
+                            boolvar.put(LHS, Boolean.valueOf(RHS));
+                        } else
+                            ExceptionController.handleErr(SampleController.findStatement(RHS).getLabel(), ExceptionController.EXPTPWRONG);
+                    } else
+                        ExceptionController.handleErr(SampleController.findStatement(RHS).getLabel(), ExceptionController.EXPTPWRONG);
+                }
+            }
+
+            // condition 4 : LHS is expression ( expression = int / expression = expression / expression = bool / expression = variable )
+            if (checkRefType(LHS) == 3) {
+                ExceptionController.handleErr(s.getLabel(), ExceptionController.NOTVAR);
+            }
+
+        }
     }
-
     public static void print(Statement s) throws InterpreterException {//REQ5
         String expression = s.getExpression();
         if(checkRefType(expression) == 0 || checkRefType(expression) == 1)

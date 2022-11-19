@@ -14,6 +14,8 @@ public class SampleController {
     public static List<String> DeExecuteType = Arrays.asList("vardef", "binexpr", "unexpr", "assign", "print", "skip", "block", "if", "while");
     public static List<String> RunExecuteType = Arrays.asList("program","execute", "list", "store", "load");
 
+    public static List<String> DebugExecute = Arrays.asList("debug","togglebreakpoint","inspect","instrument");
+
     public static void Initial(String str) throws InterpreterException {
         StringTokenizer currentSub = new StringTokenizer(str, " ");
         String temp1 = currentSub.nextToken();
@@ -46,6 +48,14 @@ public class SampleController {
                     break;
                 case "load":
                     RunController.load(temp2);
+                    break;
+            }
+        }
+        else if(DebugExecute.contains(temp1)){
+            temp2 = str.substring(temp1.length()+1);
+            switch(temp1){
+                case"instrument":
+                    DebugController.instrument(temp2);
                     break;
             }
         }
