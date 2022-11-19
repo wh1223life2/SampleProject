@@ -110,7 +110,13 @@ public class SampleModel {
 
         String type = st.nextToken();
         String varname = st.nextToken();
+        if(checkRefType(varname.charAt(0) + "") == 0){ExceptionController.handleErr(statement.getLabel(),ExceptionController.NOOPETP);}
+
         String value = st.nextToken();
+        if(Integer.parseInt(value) > 99999 || Integer.parseInt(value) < -99999){
+            ExceptionController.handleErr(statement.getLabel(),ExceptionController.OUTRANGE);
+        }
+
         //System.out.println(type);
         if(intvar.containsKey(varname) || boolvar.containsKey(varname))
             ExceptionController.handleErr(statement.getLabel(),ExceptionController.DUPVARNAME);
@@ -181,9 +187,18 @@ public class SampleModel {
      */
     public static int calculator(Statement s,String bop, int value_exp1, int value_exp2) throws InterpreterException{
         if(bop.equals("%")){return value_exp1 % value_exp2;}
-        else if(bop.equals("+")){return value_exp1 + value_exp2;}
-        else if(bop.equals("-")){return value_exp1 - value_exp2;}
-        else if(bop.equals("*")){return value_exp1 * value_exp2;}
+        else if(bop.equals("+")){
+            if(value_exp1 + value_exp2 > 99999){ExceptionController.handleErr(s.getLabel(),ExceptionController.OUTRANGE);}
+            else return value_exp1 + value_exp2;
+        }
+        else if(bop.equals("-")){
+            if(value_exp1 - value_exp2 < -99999){ExceptionController.handleErr(s.getLabel(),ExceptionController.OUTRANGE);}
+            else return value_exp1 - value_exp2;
+        }
+        else if(bop.equals("*")){
+            if(value_exp1 * value_exp2 > 99999){ExceptionController.handleErr(s.getLabel(),ExceptionController.OUTRANGE);}
+            else return value_exp1 * value_exp2;
+        }
         else if(bop.equals("/")){
             if(value_exp2 == 0)ExceptionController.handleErr(s.getLabel(),ExceptionController.DIVBYZERO);
             return value_exp1 / value_exp2;}
@@ -383,7 +398,7 @@ public class SampleModel {
                                     return String.valueOf(true);
                                 } else return String.valueOf(false);
                             }
-                        }
+                        }else ExceptionController.handleErr(s.getLabel(),ExceptionController.NOOPETP);
                     }
                 }
                 // 2. exp1 = expression, exp2 = bool/expression
@@ -408,10 +423,10 @@ public class SampleModel {
                                             return String.valueOf(true);
                                         } else return String.valueOf(false);
                                     }
-                                }
+                                }else ExceptionController.handleErr(s.getLabel(),ExceptionController.NOOPETP);
                             }
                         }
-                    }
+                    }else ExceptionController.handleErr(s.getLabel(),ExceptionController.NOOPETP);
                 }
             }
             // condition 1 : exp1 = int , exp2 = int
@@ -590,6 +605,66 @@ public class SampleModel {
             }
 
         }
+
+        // condition 2 : post_increment and post_decrease
+        if(b.equals("~") || b.equals("#")){
+            if(a.equals("#")){
+                // 1 : b is int
+                if(checkRefType(a) == 0){
+                    Integer a_value = Integer.parseInt(a);
+                    return String.valueOf(a_value);
+                }
+                // 2 : b is bool
+                if(checkRefType(a) == 1){
+                    ExceptionController.handleErr(s.getLabel(),ExceptionController.SYNTAX);
+                }
+                // 3 : b is variable
+                if(checkRefType(a) == 2){
+                    if(intvar.get(a) == null){ExceptionController.handleErr(s.getLabel(),ExceptionController.UNDEFINEDVAR);}
+                    int a_value = intvar.get(a);
+                    intvar.put(a,a_value+1);
+                    return String.valueOf(a_value);
+                }
+                // 4 : b is expression
+                if(checkRefType(a) == 3){
+                    if(SampleController.findStatement(a).equals("binexpr") ){
+                        if(checkRefType(binExpr(SampleController.findStatement(a))) == 0){
+                            String value = binExpr(SampleController.findStatement(a));
+                            Integer a_value = Integer.parseInt(value);
+                            return String.valueOf(a_value);
+                        }
+                    }
+                }
+            }
+            if(a.equals("~")){
+                // 1 : b is int
+                if(checkRefType(a) == 0){
+                    Integer a_value = Integer.parseInt(a);
+                    return String.valueOf(a_value);
+                }
+                // 2 : b is bool
+                if(checkRefType(a) == 1){
+                    ExceptionController.handleErr(s.getLabel(),ExceptionController.SYNTAX);
+                }
+                // 3 : b is variable
+                if(checkRefType(a) == 2){
+                    if(intvar.get(a) == null){ExceptionController.handleErr(s.getLabel(),ExceptionController.UNDEFINEDVAR);}
+                    int a_value = intvar.get(a);
+                    intvar.put(a,a_value-1);
+                    return String.valueOf(a_value);
+                }
+                // 4 : b is expression
+                if(checkRefType(a) == 3){
+                    if(SampleController.findStatement(a).equals("binexpr") ){
+                        if(checkRefType(binExpr(SampleController.findStatement(a))) == 0){
+                            String value = binExpr(SampleController.findStatement(a));
+                            Integer a_value = Integer.parseInt(value);
+                            return String.valueOf(a_value);
+                        }
+                    }
+                }
+            }
+        }
         return "";
     }
 
@@ -611,11 +686,13 @@ public class SampleModel {
         if (checkRefType(LHS) == 0) {
             ExceptionController.handleErr(s.getLabel(), ExceptionController.NOTVAR);
         }
+        if(checkRefType(LHS) == 0){ExceptionController.handleErr(s.getLabel(),ExceptionController.SYNTAX);}
 
         //condition 2 : LHS is bool ( bool = int / bool = variable / bool = bool / bool = expression) which are all wrong
         if (checkRefType(LHS) == 1) {
             ExceptionController.handleErr(s.getLabel(), ExceptionController.NOTVAR);
         }
+        if(checkRefType(LHS) == 1){ExceptionController.handleErr(s.getLabel(),ExceptionController.SYNTAX);}
 
         //condition 3 : LHS is variable (variable = int / variable = expression / variable = bool / variable = variable)
         if (checkRefType(LHS) == 2) {

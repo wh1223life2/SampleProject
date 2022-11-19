@@ -71,6 +71,12 @@ public class ExceptionController {
     public static final int NOPRONAME = 14;
 
     /**
+     * The constant OUTRANGE.
+     */
+
+    public static final int OUTRANGE = 15;
+
+    /**
      * Handle err.
      *
      * @param label the label
@@ -95,6 +101,7 @@ public class ExceptionController {
                 "Duplicate program name",
                 "Duplicate variable name",
                 "program name does not exist",
+                "value is out of range",
         };
         throw new InterpreterException("<" + label + "> " + err[error]);
     }
