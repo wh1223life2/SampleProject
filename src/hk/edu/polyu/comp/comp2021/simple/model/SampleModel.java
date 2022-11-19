@@ -174,10 +174,8 @@ public class SampleModel {
         String exp1 = st.nextToken();
         String bop = st.nextToken();
         String exp2 = st.nextToken();
-        String[] list = {"%","+","-","*","/",">",">=","<","<=","==","!=","&&","||"};
-        for(int i = 0; i < list.length; i++){
-            if(!bop.equals(list[i])){ExceptionController.handleErr(s.getLabel(),ExceptionController.NOTBINOP);}
-        }
+        List<String> bops = Arrays.asList("%","+","-","*","/",">",">=","<","<=","==","!=","&&","||");
+        if(!bops.contains(bop)){ExceptionController.handleErr(s.getLabel(),ExceptionController.NOTBINOP);}
 
 
         // calculation
