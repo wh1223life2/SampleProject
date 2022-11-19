@@ -1,7 +1,7 @@
 package hk.edu.polyu.comp.comp2021.simple.view;
 
-import hk.edu.polyu.comp.comp2021.simple.control.InterpreterException;
-import hk.edu.polyu.comp.comp2021.simple.control.SampleController;
+import hk.edu.polyu.comp.comp2021.simple.model.InterpreterException;
+import hk.edu.polyu.comp.comp2021.simple.model.SampleController;
 
 import java.util.Scanner;
 

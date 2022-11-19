@@ -1,12 +1,8 @@
-package hk.edu.polyu.comp.comp2021.simple.control;
-
-import hk.edu.polyu.comp.comp2021.simple.model.SampleModel;
-import hk.edu.polyu.comp.comp2021.simple.model.Statement;
+package hk.edu.polyu.comp.comp2021.simple.model;
 
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.HashSet;
 import java.util.StringTokenizer;
 
 /**

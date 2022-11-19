@@ -1,6 +1,4 @@
-package hk.edu.polyu.comp.comp2021.simple.control;
-
-import static hk.edu.polyu.comp.comp2021.simple.control.SampleController.total;
+package hk.edu.polyu.comp.comp2021.simple.model;
 
 
 /**
