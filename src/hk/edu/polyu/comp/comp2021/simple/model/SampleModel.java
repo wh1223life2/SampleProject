@@ -99,7 +99,7 @@ public class SampleModel {
      * @param statement the statement
      * @throws InterpreterException the interpreter exception
      */
-    public static void varDefine(Statement statement) throws InterpreterException { //REQ1 名字限制未达成
+    public static void varDefine(Statement statement) throws InterpreterException {
 
         String expression = statement.getExpression();
         StringTokenizer st = new StringTokenizer(expression," ");
