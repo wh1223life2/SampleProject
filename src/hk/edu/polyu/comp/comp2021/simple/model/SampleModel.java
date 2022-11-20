@@ -106,7 +106,6 @@ public class SampleModel {
 
         String type = st.nextToken();
         String varname = st.nextToken();
-        if(checkRefType(varname.charAt(0) + "") == 0){ExceptionController.handleErr(statement.getLabel(),ExceptionController.NOOPETP);}
 
         String value = st.nextToken();
         if(Integer.parseInt(value) > 99999 || Integer.parseInt(value) < -99999){
