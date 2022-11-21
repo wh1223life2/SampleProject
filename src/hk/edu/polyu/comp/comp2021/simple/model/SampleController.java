@@ -93,7 +93,7 @@ public class SampleController {
      * @return the boolean
      */
     public static boolean checkUnique(String newlabel) {
-        for (Statement p : SampleModel.currentblock)
+        for (Statement p : total)
             if (p.getLabel().equals(newlabel))
                 return false;
         return true;
@@ -107,7 +107,7 @@ public class SampleController {
      * @throws InterpreterException the interpreter exception
      */
     public static Statement findStatement(String newlabel) throws InterpreterException {
-        for (Statement p : SampleModel.currentblock)
+        for (Statement p : total)
             if (p.getLabel().equals(newlabel))
                 return p;
         ExceptionController.handleErr(newlabel,ExceptionController.UNDEFLABEL);

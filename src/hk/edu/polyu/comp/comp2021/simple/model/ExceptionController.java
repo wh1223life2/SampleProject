@@ -5,75 +5,22 @@ package hk.edu.polyu.comp.comp2021.simple.model;
  * The type Exception controller.
  */
 public class ExceptionController {
-    /**
-     * The constant SYNTAX.
-     */
     public static final int SYNTAX = 0;
-    /**
-     * The constant NOVARTP.
-     */
     public static final int NOVARTP = 1;
-    /**
-     * The constant NOEXPTP.
-     */
     public static final int NOEXPTP = 2;
-    /**
-     * The constant DIVBYZERO.
-     */
     public static final int DIVBYZERO = 3;
-    /**
-     * The constant EQUALEXPECTED.
-     */
     public static final int EQUALEXPECTED = 4;
-    /**
-     * The constant NOTVAR.
-     */
     public static final int NOTVAR = 5;
-    /**
-     * The constant DUPLABEL.
-     */
     public static final int DUPLABEL = 6;
-    /**
-     * The constant UNDEFLABEL.
-     */
     public static final int UNDEFLABEL = 7;
-    /**
-     * The constant UNDEFINEDVAR.
-     */
     public static final int UNDEFINEDVAR = 8;
-    /**
-     * The constant NOOPETP.
-     */
     public static final int NOOPETP = 9;
-
-    /**
-     * The constant NOTBINOP.
-     */
     public static final int NOTBINOP = 10;
-
-    /**
-     * The constant EXPTPWRONG.
-     */
     public static final int EXPTPWRONG = 11;
-    /**
-     * The constant DUPNAME.
-     */
     public static final int DUPNAME = 12;
-    /**
-     * The constant DUPVARNAME.
-     */
     public static final int DUPVARNAME = 13;
-    /**
-     * The constant NOPRONAME.
-     */
     public static final int NOPRONAME = 14;
-
-    /**
-     * The constant OUTRANGE.
-     */
-
     public static final int OUTRANGE = 15;
-
     /**
      * Handle err.
      *
